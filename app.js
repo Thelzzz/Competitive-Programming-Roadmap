@@ -8,6 +8,7 @@ let currentDiffFilter = 'all';
 let currentCategoryFilter = 'all';
 
 let collapsedCategories = new Set();
+let collapsedSubtopics = new Set();
 
 const diffColors = {
   Easy: 'text-emerald-700 bg-emerald-100 border-emerald-300 dark:text-emerald-400 dark:bg-emerald-950/60 dark:border-emerald-800/60',
@@ -67,12 +68,21 @@ function populateCategoryFilter() {
   });
 }
 
-// 3. Сворачивание тем
+// 3. Сворачивание тем и подтем
 window.toggleCategory = function(cat) {
   if (collapsedCategories.has(cat)) {
     collapsedCategories.delete(cat);
   } else {
     collapsedCategories.add(cat);
+  }
+  render();
+};
+
+window.toggleSubtopic = function(subKey) {
+  if (collapsedSubtopics.has(subKey)) {
+    collapsedSubtopics.delete(subKey);
+  } else {
+    collapsedSubtopics.add(subKey);
   }
   render();
 };
@@ -90,14 +100,14 @@ window.toggleAllCategories = function() {
 // 4. Отметка задач + Конфетти
 window.toggleTask = function(id, event) {
   const task = tasks.find(t => t.id === id);
-  if (task && task.locked) return; // Заблокированные задачи нельзя отметить
+  if (task && task.locked) return;
 
   const isNowSolved = !solvedIds.includes(id);
 
   if (isNowSolved) {
     solvedIds.push(id);
 
-    // 🎉 Мини-салют прямо из точки клика!
+    // Салют из точки клика
     const x = event ? event.clientX / window.innerWidth : 0.5;
     const y = event ? event.clientY / window.innerHeight : 0.6;
     
@@ -116,7 +126,6 @@ window.toggleTask = function(id, event) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(solvedIds));
   render();
 
-  // 🏆 Огромный салют, если решены ВСЕ задачи роадмапа
   if (solvedIds.length === tasks.length && tasks.length > 0) {
     setTimeout(() => {
       confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
@@ -171,7 +180,6 @@ function render() {
       currentStatusFilter === 'all' ? true :
       currentStatusFilter === 'solved' ? isSolved : !isSolved;
     
-    // Если задача под замком, не фильтруем её по сложности
     const matchesDiff = 
       currentDiffFilter === 'all' ? true : (!t.locked && t.difficulty === currentDiffFilter);
 
@@ -208,16 +216,19 @@ function render() {
     
     const isCollapsed = collapsedCategories.has(cat);
 
+    // Группировка задач внутри темы по подтемам (subtopic)
+    const subtopicNames = [...new Set(catTasks.map(t => t.subtopic || ''))];
+
     return `
-      <section class="space-y-3 mb-6">
-        <!-- Шапка раздела -->
+      <section class="space-y-3 mb-6 bg-slate-50/50 dark:bg-slate-900/30 p-3 sm:p-4 rounded-2xl border border-slate-200/60 dark:border-slate-800/60">
+        <!-- Главная шапка темы -->
         <div 
           onclick="toggleCategory('${cat}')" 
-          class="flex items-center justify-between p-2 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-800/80 hover:bg-slate-100/60 dark:hover:bg-slate-900/60 cursor-pointer select-none transition-all group"
+          class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-200/50 dark:hover:bg-slate-800/50 cursor-pointer select-none transition-all group"
           title="Нажмите, чтобы ${isCollapsed ? 'развернуть' : 'свернуть'}"
         >
           <div class="flex items-center gap-2.5">
-            <div class="w-6 h-6 flex items-center justify-center rounded-lg bg-slate-200/70 dark:bg-slate-800 group-hover:bg-blue-500 group-hover:text-white text-slate-500 dark:text-slate-400 transition-colors">
+            <div class="w-6 h-6 flex items-center justify-center rounded-lg bg-slate-200/80 dark:bg-slate-800 group-hover:bg-blue-500 group-hover:text-white text-slate-500 dark:text-slate-400 transition-colors">
               <svg 
                 class="w-3.5 h-3.5 transition-transform duration-200 ${isCollapsed ? '-rotate-90' : 'rotate-0'}" 
                 fill="none" 
@@ -228,78 +239,110 @@ function render() {
               </svg>
             </div>
 
-            <h2 class="text-lg font-bold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            <h2 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
               ${cat}
             </h2>
           </div>
 
-          <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-slate-300 dark:group-hover:bg-slate-700 transition-colors">
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
             ${solvedInCat} / ${allCatTasks.length}
           </span>
         </div>
 
-        <!-- Список задач -->
-        <div class="${isCollapsed ? 'hidden' : 'space-y-2.5 pl-1'}">
-          ${catTasks.map(t => {
-            const isSolved = solvedIds.includes(t.id);
-            const isLocked = t.locked === true;
+        <!-- Содержимое темы (подтемы и задачи) -->
+        <div class="${isCollapsed ? 'hidden' : 'space-y-4 pt-2'}">
+          ${subtopicNames.map(subName => {
+            const subTasks = catTasks.filter(t => (t.subtopic || '') === subName);
+            const subKey = `${cat}_${subName}`;
+            const isSubCollapsed = collapsedSubtopics.has(subKey);
 
-            // Стили карточки
-            let cardClasses = '';
-            if (isLocked) {
-              cardClasses = 'bg-slate-100/40 dark:bg-slate-900/20 border-slate-200/60 dark:border-slate-800/40 opacity-60 cursor-not-allowed select-none border-dashed';
-            } else if (isSolved) {
-              cardClasses = 'bg-slate-100/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/40 opacity-60 cursor-pointer select-none';
-            } else {
-              cardClasses = 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm cursor-pointer select-none';
-            }
+            const allSubTasks = tasks.filter(t => (t.category || 'Общее') === cat && (t.subtopic || '') === subName);
+            const solvedInSub = allSubTasks.filter(t => solvedIds.includes(t.id)).length;
+            const isSubAllLocked = allSubTasks.length > 0 && allSubTasks.every(t => t.locked);
 
             return `
-              <div 
-                ${isLocked ? '' : `onclick="toggleTask(${t.id}, event)"`}
-                class="flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 ${cardClasses}"
-              >
-                <div class="flex items-center gap-3.5 flex-1 min-w-0 pr-3">
-                  <!-- Иконка: Замок или Чекбокс -->
-                  ${isLocked 
-                    ? `<span class="text-base select-none flex-shrink-0" title="${t.lockReason || 'Заблокировано'}">🔒</span>` 
-                    : `<input 
-                        type="checkbox" 
-                        id="task-${t.id}" 
-                        ${isSolved ? 'checked' : ''} 
-                        class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-blue-600 accent-blue-600 flex-shrink-0 pointer-events-none"
-                      />`
-                  }
-                  
-                  <div class="truncate">
-                    <!-- Заголовок: скрыт или ссылка -->
-                    ${isLocked 
-                      ? `<span class="text-sm sm:text-base font-medium italic text-slate-400 dark:text-slate-500 select-none">Скрытая задача</span>`
-                      : `<a 
-                          href="${t.url}" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          onclick="event.stopPropagation()"
-                          class="text-sm sm:text-base font-medium truncate hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors ${
-                            isSolved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'
-                          }"
-                          title="Перейти к задаче: ${t.title}"
-                        >
-                          ${t.title}
-                        </a>`
-                    }
-                    ${isLocked && t.lockReason ? `<p class="text-[11px] text-amber-600 dark:text-amber-400 font-medium not-italic">${t.lockReason}</p>` : ''}
-                  </div>
-                </div>
-                
-                <!-- Сложность -->
-                ${!isLocked ? `
-                  <div class="flex-shrink-0">
-                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
-                      ${t.difficulty}
+              <div class="space-y-2">
+                <!-- Шапка подтемы (отображается, если у задачи есть subtopic) -->
+                ${subName ? `
+                  <div 
+                    onclick="toggleSubtopic('${subKey}')"
+                    class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-slate-200/60 dark:bg-slate-800/60 hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer select-none transition-colors text-xs font-semibold text-slate-700 dark:text-slate-300"
+                  >
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] transform transition-transform ${isSubCollapsed ? '-rotate-90' : 'rotate-0'}">▼</span>
+                      <span>${isSubAllLocked ? '🔒 ' : '📌 '}${subName}</span>
+                    </div>
+                    <span class="text-[11px] font-normal text-slate-500 dark:text-slate-400">
+                      ${solvedInSub} / ${allSubTasks.length}
                     </span>
                   </div>
                 ` : ''}
+
+                <!-- Список задач подтемы -->
+                <div class="${isSubCollapsed ? 'hidden' : 'space-y-2'}">
+                  ${subTasks.map(t => {
+                    const isSolved = solvedIds.includes(t.id);
+                    const isLocked = t.locked === true;
+
+                    let cardClasses = '';
+                    if (isLocked) {
+                      cardClasses = 'bg-slate-100/40 dark:bg-slate-900/20 border-slate-200/60 dark:border-slate-800/40 opacity-60 cursor-not-allowed select-none border-dashed';
+                    } else if (isSolved) {
+                      cardClasses = 'bg-slate-100/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/40 opacity-60 cursor-pointer select-none';
+                    } else {
+                      cardClasses = 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm cursor-pointer select-none';
+                    }
+
+                    return `
+                      <div 
+                        ${isLocked ? '' : `onclick="toggleTask(${t.id}, event)"`}
+                        class="flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 ${cardClasses}"
+                      >
+                        <div class="flex items-center gap-3.5 flex-1 min-w-0 pr-3">
+                          <!-- Иконка -->
+                          ${isLocked 
+                            ? `<span class="text-base select-none flex-shrink-0" title="${t.lockReason || 'Заблокировано'}">🔒</span>` 
+                            : `<input 
+                                type="checkbox" 
+                                id="task-${t.id}" 
+                                ${isSolved ? 'checked' : ''} 
+                                class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-blue-600 accent-blue-600 flex-shrink-0 pointer-events-none"
+                              />`
+                          }
+                          
+                          <div class="truncate">
+                            <!-- Название -->
+                            ${isLocked 
+                              ? `<span class="text-sm sm:text-base font-medium italic text-slate-400 dark:text-slate-500 select-none">Скрытая задача</span>`
+                              : `<a 
+                                  href="${t.url}" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  onclick="event.stopPropagation()"
+                                  class="text-sm sm:text-base font-medium truncate hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors ${
+                                    isSolved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'
+                                  }"
+                                  title="Перейти к задаче: ${t.title}"
+                                >
+                                  ${t.title}
+                                </a>`
+                            }
+                            ${isLocked && t.lockReason ? `<p class="text-[11px] text-amber-600 dark:text-amber-400 font-medium not-italic">${t.lockReason}</p>` : ''}
+                          </div>
+                        </div>
+                        
+                        <!-- Сложность -->
+                        ${!isLocked ? `
+                          <div class="flex-shrink-0">
+                            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
+                              ${t.difficulty}
+                            </span>
+                          </div>
+                        ` : ''}
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
               </div>
             `;
           }).join('')}
