@@ -1,0 +1,14 @@
+[
+  { "id": 1, "title": "Two Sum (Два числа)", "category": "Массивы и Хэш-таблицы", "url": "https://leetcode.com/problems/two-sum/", "difficulty": "Easy" },
+  { "id": 2, "title": "Contains Duplicate", "category": "Массивы и Хэш-таблицы", "url": "https://leetcode.com/problems/contains-duplicate/", "difficulty": "Easy" },
+  { "id": 3, "title": "Container With Most Water", "category": "Массивы и Хэш-таблицы", "url": "https://leetcode.com/problems/container-with-most-water/", "difficulty": "Medium" },
+  
+  { "id": 4, "title": "Valid Parentheses (Правильные скобки)", "category": "Стеки", "url": "https://leetcode.com/problems/valid-parentheses/", "difficulty": "Easy" },
+  { "id": 5, "title": "Evaluate Reverse Polish Notation", "category": "Стеки", "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/", "difficulty": "Medium" },
+  
+  { "id": 6, "title": "Reverse Linked List (Разворот списка)", "category": "Связные списки", "url": "https://leetcode.com/problems/reverse-linked-list/", "difficulty": "Easy" },
+  { "id": 7, "title": "Merge Two Sorted Lists", "category": "Связные списки", "url": "https://leetcode.com/problems/merge-two-sorted-lists/", "difficulty": "Easy" },
+  
+  { "id": 8, "title": "Binary Tree Level Order Traversal", "category": "Деревья и Графы", "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/", "difficulty": "Medium" },
+  { "id": 9, "title": "Median of Two Sorted Arrays", "category": "Деревья и Графы", "url": "https://leetcode.com/problems/median-of-two-sorted-arrays/", "difficulty": "Hard" }
+]
