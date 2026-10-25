@@ -50,6 +50,7 @@ async function loadTasks() {
     populateCategoryFilter();
     render();
   } catch (e) {
+    console.error('Причина ошибки:', e);
     document.getElementById('task-list').innerHTML = 
       '<div class="text-center text-rose-500 py-10">Ошибка загрузки tasks.json</div>';
   }
