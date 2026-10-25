@@ -83,7 +83,6 @@ async function loadTasks() {
       return catItem;
     });
 
-    //populateCategoryFilter();
     render();
   } catch (e) {
     console.error('Ошибка загрузки tasks.json:', e);
@@ -150,7 +149,11 @@ window.toggleTask = function(id, event) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(solvedIds));
   render();
 
-  if (solvedIds.length === tasks.length && tasks.length > 0) {
+  // Проверяем 100% только среди открытых задач!
+  const unlockedTasks = tasks.filter(t => !t.locked);
+  const unlockedSolved = unlockedTasks.filter(t => solvedIds.includes(t.id));
+  
+  if (unlockedSolved.length === unlockedTasks.length && unlockedTasks.length > 0) {
     setTimeout(() => {
       confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
     }, 200);
@@ -191,8 +194,10 @@ window.setCategoryFilter = function(category) {
 
 // 6. Отрисовка
 function render() {
-  const total = tasks.length;
-  const solved = solvedIds.length;
+  // ОБЩИЙ ПРОГРЕСС: учитываем только открытые задачи!
+  const unlockedTasks = tasks.filter(t => !t.locked);
+  const total = unlockedTasks.length;
+  const solved = unlockedTasks.filter(t => solvedIds.includes(t.id)).length;
   const percent = total > 0 ? Math.round((solved / total) * 100) : 0;
 
   document.getElementById('progress-text').innerText = `${solved} / ${total} (${percent}%)`;
@@ -235,8 +240,11 @@ function render() {
 
   listContainer.innerHTML = headerControls + activeCategories.map(cat => {
     const catTasks = filtered.filter(t => (t.category || 'Общее') === cat);
+    
+    // Считаем прогресс категории только по открытым задачам
     const allCatTasks = tasks.filter(t => (t.category || 'Общее') === cat);
-    const solvedInCat = allCatTasks.filter(t => solvedIds.includes(t.id)).length;
+    const unlockedCatTasks = allCatTasks.filter(t => !t.locked);
+    const solvedInCat = unlockedCatTasks.filter(t => solvedIds.includes(t.id)).length;
     
     const isCollapsed = collapsedCategories.has(cat);
 
@@ -268,8 +276,9 @@ function render() {
             </h2>
           </div>
 
+          <!-- Счетчик в категории (показывает цифры только если есть открытые задачи) -->
           <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-            ${solvedInCat} / ${allCatTasks.length}
+            ${unlockedCatTasks.length > 0 ? `${solvedInCat} / ${unlockedCatTasks.length}` : '🔒'}
           </span>
         </div>
 
@@ -286,7 +295,7 @@ function render() {
 
             return `
               <div class="space-y-2">
-                <!-- Шапка подтемы (отображается, если у задачи есть subtopic) -->
+                <!-- Шапка подтемы -->
                 ${subName ? `
                   <div 
                     onclick="toggleSubtopic('${subKey}')"
@@ -294,17 +303,29 @@ function render() {
                   >
                     <div class="flex items-center gap-2">
                       <span class="text-[10px] transform transition-transform ${isSubCollapsed ? '-rotate-90' : 'rotate-0'}">▼</span>
-                      <span>${isSubAllLocked ? '🔒 ' : ' '}${subName}</span>
+                      <span>${isSubAllLocked ? '🔒 ' : ''}${subName}</span>
                     </div>
-                    <span class="text-[11px] font-normal text-slate-500 dark:text-slate-400">
-                      ${solvedInSub} / ${allSubTasks.length}
-                    </span>
+
+                    <!-- ЕСЛИ ПОДТЕМА ЗАБЛОКИРОВАНА — СЧЁТЧИК СКРЫВАЕТСЯ -->
+                    ${!isSubAllLocked ? `
+                      <span class="text-[11px] font-normal text-slate-500 dark:text-slate-400">
+                        ${solvedInSub} / ${allSubTasks.length}
+                      </span>
+                    ` : ''}
                   </div>
                 ` : ''}
 
                 <!-- Список задач подтемы -->
                 <div class="${isSubCollapsed ? 'hidden' : 'space-y-2'}">
-                  ${subTasks.map(t => {
+                  ${isSubAllLocked ? `
+                    <!-- ЕСЛИ ПОДТЕМА ЗАБЛОКИРОВАНА: ТОЛЬКО ЗНАЧОК И ПРИЧИНА -->
+                    <div class="py-7 px-4 flex flex-col items-center justify-center text-center bg-slate-100/40 dark:bg-slate-900/20 rounded-xl border border-dashed border-slate-300 dark:border-slate-800">
+                      <span class="text-3xl mb-2 select-none">🔒</span>
+                      <p class="text-xs font-medium text-slate-500 dark:text-slate-400">
+                        ${allSubTasks[0]?.lockReason || 'Откроется после следующего занятия'}
+                      </p>
+                    </div>
+                  ` : subTasks.map(t => {
                     const isSolved = solvedIds.includes(t.id);
                     const isLocked = t.locked === true;
 
@@ -323,7 +344,6 @@ function render() {
                         class="flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 ${cardClasses}"
                       >
                         <div class="flex items-center gap-3.5 flex-1 min-w-0 pr-3">
-                          <!-- Иконка -->
                           ${isLocked 
                             ? `<span class="text-base select-none flex-shrink-0" title="${t.lockReason || 'Заблокировано'}">🔒</span>` 
                             : `<input 
@@ -335,7 +355,6 @@ function render() {
                           }
                           
                           <div class="truncate">
-                            <!-- Название -->
                             ${isLocked 
                               ? `<span class="text-sm sm:text-base font-medium italic text-slate-400 dark:text-slate-500 select-none">Скрытая задача</span>`
                               : `<a 
@@ -355,7 +374,6 @@ function render() {
                           </div>
                         </div>
                         
-                        <!-- Сложность -->
                         ${!isLocked ? `
                           <div class="flex-shrink-0">
                             <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
