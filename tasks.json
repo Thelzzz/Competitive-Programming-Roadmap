@@ -10,8 +10,8 @@
   { "id": 9, "title": "ACMP 1437. Маги", "category": "Сортировка", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=2&id_section=12&id_topic=8&id_problem=42", "difficulty": "Easy" },
   { "id": 10, "title": "ACMP 178. Преобразование последовательности", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=178", "difficulty": "Easy" },
   { "id": 11, "title": "ACMP 475. Арифметическая прогрессия - 2", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=475", "difficulty": "Easy" },
-  { "id": 12, "title": "ACMP 344. Ближайшие точки", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=344", "difficulty": "Easy" }
-  { "id": 13, "title": "ACMP 112. Армия", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=112", "difficulty": "Hard" }
-  { "id": 14, "title": "ACMP 252. Сортировка масс", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=252", "difficulty": "Medium" }
+  { "id": 12, "title": "ACMP 344. Ближайшие точки", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=344", "difficulty": "Easy" },
+  { "id": 13, "title": "ACMP 112. Армия", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=112", "difficulty": "Hard" },
+  { "id": 14, "title": "ACMP 252. Сортировка масс", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=252", "difficulty": "Medium" },
   { "id": 15, "title": "ACMP 41. Сортировка подсчетом", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=41", "difficulty": "Easy" }
 ]
