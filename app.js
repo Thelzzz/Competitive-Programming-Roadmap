@@ -7,6 +7,9 @@ let currentStatusFilter = 'all';
 let currentDiffFilter = 'all';
 let currentCategoryFilter = 'all';
 
+// Хранилище для свернутых категорий (по умолчанию все открыты)
+let collapsedCategories = new Set();
+
 const diffColors = {
   Easy: 'text-emerald-700 bg-emerald-100 border-emerald-300 dark:text-emerald-400 dark:bg-emerald-950/60 dark:border-emerald-800/60',
   Medium: 'text-amber-700 bg-amber-100 border-amber-300 dark:text-amber-400 dark:bg-amber-950/60 dark:border-amber-800/60',
@@ -53,7 +56,6 @@ async function loadTasks() {
   }
 }
 
-// Автоматически заполняем выпадающий список категориями
 function populateCategoryFilter() {
   const categories = [...new Set(tasks.map(t => t.category || 'Общее'))];
   const select = document.getElementById('category-filter');
@@ -65,7 +67,17 @@ function populateCategoryFilter() {
   });
 }
 
-// 3. Отметка выполнения
+// 3. Сворачивание / Разворачивание категорий
+function toggleCategoryCollapse(cat) {
+  if (collapsedCategories.has(cat)) {
+    collapsedCategories.delete(cat);
+  } else {
+    collapsedCategories.add(cat);
+  }
+  render();
+}
+
+// 4. Отметка выполнения
 function toggleTask(id) {
   if (solvedIds.includes(id)) {
     solvedIds = solvedIds.filter(item => item !== id);
@@ -88,7 +100,7 @@ function resetProgress() {
   }
 }
 
-// 4. Фильтры
+// 5. Фильтры
 function setStatusFilter(status) {
   currentStatusFilter = status;
   ['all', 'unsolved', 'solved'].forEach(s => {
@@ -112,9 +124,9 @@ function setCategoryFilter(category) {
   render();
 }
 
-// 5. Отрисовка задач с группировкой по разделам
+// 6. Отрисовка
 function render() {
-  // Общий прогресс
+  // Прогресс
   const total = tasks.length;
   const solved = solvedIds.length;
   const percent = total > 0 ? Math.round((solved / total) * 100) : 0;
@@ -122,7 +134,7 @@ function render() {
   document.getElementById('progress-text').innerText = `${solved} / ${total} (${percent}%)`;
   document.getElementById('progress-bar').style.width = `${percent}%`;
 
-  // Фильтруем все задачи
+  // Фильтрация задач
   const filtered = tasks.filter(t => {
     const isSolved = solvedIds.includes(t.id);
     const matchesStatus = 
@@ -144,30 +156,45 @@ function render() {
     return;
   }
 
-  // Получаем список категорий, в которых есть отфильтрованные задачи
   const activeCategories = [...new Set(filtered.map(t => t.category || 'Общее'))];
 
   listContainer.innerHTML = activeCategories.map(cat => {
     const catTasks = filtered.filter(t => (t.category || 'Общее') === cat);
-    
-    // Статистика конкретно этой категории
     const allCatTasks = tasks.filter(t => (t.category || 'Общее') === cat);
     const solvedInCat = allCatTasks.filter(t => solvedIds.includes(t.id)).length;
+    
+    // Проверяем, свернут ли раздел сейчас
+    const isCollapsed = collapsedCategories.has(cat);
 
     return `
       <section class="space-y-3">
-        <!-- Шапка раздела -->
-        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-2">
-          <h2 class="text-lg font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
-            <span>${cat}</span>
-          </h2>
+        <!-- Кликабельная шапка раздела -->
+        <div 
+          onclick="toggleCategoryCollapse('${cat}')" 
+          class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-2 cursor-pointer select-none group"
+        >
+          <div class="flex items-center gap-2">
+            <!-- Стрелочка: поворачивается на -90 градусов, когда блок свернут -->
+            <svg 
+              class="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-transform duration-200 ${isCollapsed ? '-rotate-90' : 'rotate-0'}" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+            <h2 class="text-lg font-bold text-slate-700 dark:text-slate-200 group-hover:text-blue-500 transition-colors">
+              ${cat}
+            </h2>
+          </div>
+
           <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
             ${solvedInCat} / ${allCatTasks.length}
           </span>
         </div>
 
-        <!-- Задачи категории -->
-        <div class="space-y-2">
+        <!-- Задачи категории: скрываются классом hidden, если раздел свернут -->
+        <div class="${isCollapsed ? 'hidden' : 'space-y-2'}">
           ${catTasks.map(t => {
             const isSolved = solvedIds.includes(t.id);
             return `
