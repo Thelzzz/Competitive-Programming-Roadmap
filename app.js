@@ -43,11 +43,27 @@ function applyTheme(theme) {
   localStorage.setItem(THEME_KEY, theme);
 }
 
-// 2. Загрузка задач
+// 2. Загрузка задач (с поддержкой блоков)
 async function loadTasks() {
   try {
     const res = await fetch('tasks.json');
-    tasks = await res.json();
+    const rawData = await res.json();
+    
+    // Если данные сгруппированы по блокам — разворачиваем и наследуем параметры
+    tasks = rawData.flatMap(item => {
+      if (item.tasks && Array.isArray(item.tasks)) {
+        return item.tasks.map(t => ({
+          category: item.category || 'Общее',
+          subtopic: item.subtopic || '',
+          difficulty: t.difficulty || item.difficulty || 'Easy',
+          locked: t.locked !== undefined ? t.locked : (item.locked || false),
+          lockReason: t.lockReason || item.lockReason || '',
+          ...t
+        }));
+      }
+      return item; // Поддержка старого плоского формата (если где-то остался)
+    });
+
     populateCategoryFilter();
     render();
   } catch (e) {
@@ -55,17 +71,6 @@ async function loadTasks() {
     document.getElementById('task-list').innerHTML = 
       '<div class="text-center text-rose-500 py-10">Ошибка загрузки tasks.json</div>';
   }
-}
-
-function populateCategoryFilter() {
-  const categories = [...new Set(tasks.map(t => t.category || 'Общее'))];
-  const select = document.getElementById('category-filter');
-  categories.forEach(cat => {
-    const opt = document.createElement('option');
-    opt.value = cat;
-    opt.innerText = cat;
-    select.appendChild(opt);
-  });
 }
 
 // 3. Сворачивание тем и подтем
