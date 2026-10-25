@@ -7,7 +7,6 @@ let currentStatusFilter = 'all';
 let currentDiffFilter = 'all';
 let currentCategoryFilter = 'all';
 
-// Хранилище свернутых разделов
 let collapsedCategories = new Set();
 
 const diffColors = {
@@ -67,7 +66,7 @@ function populateCategoryFilter() {
   });
 }
 
-// 3. Управление сворачиванием
+// 3. Сворачивание
 window.toggleCategory = function(cat) {
   if (collapsedCategories.has(cat)) {
     collapsedCategories.delete(cat);
@@ -80,9 +79,9 @@ window.toggleCategory = function(cat) {
 window.toggleAllCategories = function() {
   const allCategories = [...new Set(tasks.map(t => t.category || 'Общее'))];
   if (collapsedCategories.size === allCategories.length) {
-    collapsedCategories.clear(); // Развернуть все
+    collapsedCategories.clear();
   } else {
-    allCategories.forEach(c => collapsedCategories.add(c)); // Свернуть все
+    allCategories.forEach(c => collapsedCategories.add(c));
   }
   render();
 };
@@ -136,7 +135,6 @@ window.setCategoryFilter = function(category) {
 
 // 6. Отрисовка
 function render() {
-  // Прогресс
   const total = tasks.length;
   const solved = solvedIds.length;
   const percent = total > 0 ? Math.round((solved / total) * 100) : 0;
@@ -144,7 +142,6 @@ function render() {
   document.getElementById('progress-text').innerText = `${solved} / ${total} (${percent}%)`;
   document.getElementById('progress-bar').style.width = `${percent}%`;
 
-  // Фильтрация
   const filtered = tasks.filter(t => {
     const isSolved = solvedIds.includes(t.id);
     const matchesStatus = 
@@ -169,7 +166,6 @@ function render() {
   const activeCategories = [...new Set(filtered.map(t => t.category || 'Общее'))];
   const allCollapsed = activeCategories.length > 0 && activeCategories.every(c => collapsedCategories.has(c));
 
-  // Кнопка «Свернуть/Развернуть все», когда показаны разделы
   let headerControls = '';
   if (currentCategoryFilter === 'all' && activeCategories.length > 1) {
     headerControls = `
@@ -190,14 +186,12 @@ function render() {
 
     return `
       <section class="space-y-3 mb-6">
-        <!-- Кликабельная шапка раздела -->
         <div 
           onclick="toggleCategory('${cat}')" 
           class="flex items-center justify-between p-2 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-800/80 hover:bg-slate-100/60 dark:hover:bg-slate-900/60 cursor-pointer select-none transition-all group"
           title="Нажмите, чтобы ${isCollapsed ? 'развернуть' : 'свернуть'}"
         >
           <div class="flex items-center gap-2.5">
-            <!-- Стрелочка -->
             <div class="w-6 h-6 flex items-center justify-center rounded-lg bg-slate-200/70 dark:bg-slate-800 group-hover:bg-blue-500 group-hover:text-white text-slate-500 dark:text-slate-400 transition-colors">
               <svg 
                 class="w-3.5 h-3.5 transition-transform duration-200 ${isCollapsed ? '-rotate-90' : 'rotate-0'}" 
@@ -219,7 +213,6 @@ function render() {
           </span>
         </div>
 
-        <!-- Список задач (прячется при скрытии) -->
         <div class="${isCollapsed ? 'hidden' : 'space-y-2.5 pl-1'}">
           ${catTasks.map(t => {
             const isSolved = solvedIds.includes(t.id);
@@ -235,17 +228,27 @@ function render() {
                     id="task-${t.id}" 
                     ${isSolved ? 'checked' : ''} 
                     onchange="toggleTask(${t.id})"
-                    class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-blue-600 cursor-pointer accent-blue-600"
+                    class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-blue-600 cursor-pointer accent-blue-600 flex-shrink-0"
                   />
-                  <label for="task-${t.id}" class="text-sm sm:text-base font-medium truncate cursor-pointer select-none ${isSolved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'}">
+                  <!-- Кликабельное название -->
+                  <a 
+                    href="${t.url}" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    class="text-sm sm:text-base font-medium truncate hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors ${
+                      isSolved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'
+                    }"
+                    title="Открыть задачу: ${t.title}"
+                  >
                     ${t.title}
-                  </label>
+                  </a>
                 </div>
                 
                 <div class="flex items-center gap-2.5">
                   <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
                     ${t.difficulty}
                   </span>
+                  <!-- Иконка сбоку тоже осталась рабочей -->
                   <a href="${t.url}" target="_blank" rel="noopener noreferrer" class="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" title="Открыть задачу">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
