@@ -1,7 +1,7 @@
 [
-  { "id": 1, "title": "Two Sum (Два числа)", "category": "Массивы и Хэш-таблицы", "url": "https://leetcode.com/problems/two-sum/", "difficulty": "Easy" },
-  { "id": 2, "title": "Contains Duplicate", "category": "Массивы и Хэш-таблицы", "url": "https://leetcode.com/problems/contains-duplicate/", "difficulty": "Easy" },
-  { "id": 3, "title": "Container With Most Water", "category": "Массивы и Хэш-таблицы", "url": "https://leetcode.com/problems/container-with-most-water/", "difficulty": "Medium" },
+  { "id": 1, "title": "ACMP 1231. Сортировка пузырьком", "category": "Сортировки", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=2&id_section=12&id_topic=8&id_problem=740", "difficulty": "Easy" },
+  { "id": 2, "title": "ACMP 1702. Сортировка выбором", "category": "Сортировки", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=2&id_section=12&id_topic=8&id_problem=739", "difficulty": "Easy" },
+  { "id": 3, "title": "ACMP 461. Выборы", "category": "Сортировки", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=2&id_section=12&id_topic=8&id_problem=37", "difficulty": "Easy" },
   
   { "id": 4, "title": "Valid Parentheses (Правильные скобки)", "category": "Стеки", "url": "https://leetcode.com/problems/valid-parentheses/", "difficulty": "Easy" },
   { "id": 5, "title": "Evaluate Reverse Polish Notation", "category": "Стеки", "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/", "difficulty": "Medium" },
