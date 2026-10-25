@@ -1,14 +1,11 @@
 [
-  { "id": 1, "title": "ACMP 1231. Сортировка пузырьком", "category": "Сортировки", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=2&id_section=12&id_topic=8&id_problem=740", "difficulty": "Easy" },
-  { "id": 2, "title": "ACMP 1702. Сортировка выбором", "category": "Сортировки", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=2&id_section=12&id_topic=8&id_problem=739", "difficulty": "Easy" },
-  { "id": 3, "title": "ACMP 461. Выборы", "category": "Сортировки", "url": "https://acmp.ru/index.asp?main=task&id_task=461", "difficulty": "Easy" },
-  { "id": 4, "title": "ACMP 314. Лексикографический порядок чисел", "category": "Сортировки", "url": "https://acmp.ru/index.asp?main=task&id_task=314", "difficulty": "Easy" },
-  
-  { "id": 5, "title": "Evaluate Reverse Polish Notation", "category": "Стеки", "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/", "difficulty": "Medium" },
-  
-  { "id": 6, "title": "Reverse Linked List (Разворот списка)", "category": "Связные списки", "url": "https://leetcode.com/problems/reverse-linked-list/", "difficulty": "Easy" },
-  { "id": 7, "title": "Merge Two Sorted Lists", "category": "Связные списки", "url": "https://leetcode.com/problems/merge-two-sorted-lists/", "difficulty": "Easy" },
-  
-  { "id": 8, "title": "Binary Tree Level Order Traversal", "category": "Деревья и Графы", "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/", "difficulty": "Medium" },
-  { "id": 9, "title": "Median of Two Sorted Arrays", "category": "Деревья и Графы", "url": "https://leetcode.com/problems/median-of-two-sorted-arrays/", "difficulty": "Hard" }
+  { "id": 1, "title": "ACMP 1231. Сортировка пузырьком", "category": "Сортировка", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=2&id_section=12&id_topic=8&id_problem=740", "difficulty": "Easy" },
+  { "id": 2, "title": "ACMP 1702. Сортировка выбором", "category": "Сортировка", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=2&id_section=12&id_topic=8&id_problem=739", "difficulty": "Easy" },
+  { "id": 3, "title": "ACMP 461. Выборы", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=461", "difficulty": "Easy" },
+  { "id": 4, "title": "ACMP 314. Лексикографический порядок чисел", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=314", "difficulty": "Easy" },
+  { "id": 5, "title": "ACMP 174. Свадьба", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=174", "difficulty": "Easy" },
+  { "id": 6, "title": "ACMP 648. Азартный Шрэк", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=648", "difficulty": "Easy" },
+  { "id": 7, "title": "ACMP 32. Годовой баланс", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=32", "difficulty": "Easy" },
+  { "id": 8, "title": "ACMP 184. Рабочее время", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=184", "difficulty": "Easy" },
+  { "id": 9, "title": "ACMP 1437. Маги", "category": "Сортировка", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=2&id_section=12&id_topic=8&id_problem=42", "difficulty": "Easy" }
 ]
