@@ -1,19 +1,38 @@
 [
-  { "id": 1, "title": "ACMP 1231. Сортировка пузырьком", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=1231", "difficulty": "Easy" },
-  { "id": 2, "title": "ACMP 1702. Сортировка выбором", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=1702", "difficulty": "Easy" },
-  { "id": 3, "title": "ACMP 461. Выборы", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=461", "difficulty": "Easy" },
-  { "id": 4, "title": "ACMP 314. Лексикографический порядок чисел", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=314", "difficulty": "Easy" },
-  { "id": 5, "title": "ACMP 174. Свадьба", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=174", "difficulty": "Easy" },
-  { "id": 6, "title": "ACMP 648. Азартный Шрэк", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=648", "difficulty": "Easy" },
-  { "id": 7, "title": "ACMP 32. Годовой баланс", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=32", "difficulty": "Easy" },
-  { "id": 8, "title": "ACMP 184. Рабочее время", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=184", "difficulty": "Easy" },
-  { "id": 9, "title": "ACMP 1437. Маги", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=1437", "difficulty": "Easy" },
-  { "id": 10, "title": "ACMP 178. Преобразование последовательности", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=178", "difficulty": "Easy" },
-  { "id": 11, "title": "ACMP 475. Арифметическая прогрессия - 2", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=475", "difficulty": "Easy" },
-  { "id": 12, "title": "ACMP 344. Ближайшие точки", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=344", "difficulty": "Easy" },
-  { "id": 13, "title": "ACMP 112. Армия", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=112", "difficulty": "Hard" },
-  { "id": 14, "title": "ACMP 252. Сортировка масс", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=252", "difficulty": "Medium", "locked": true, "lockReason": "Откроется после следующего занятия" },
-  { "id": 15, "title": "ACMP 1168. Экзамены", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=41", "difficulty": "Easy", "locked": true, "lockReason": "Откроется после следующего занятия" },
-  { "id": 16, "title": "ACMP 1016. Ученики", "category": "Сортировка", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=791", "difficulty": "Easy", "locked": true, "lockReason": "Откроется после следующего занятия" },
-  { "id": 17, "title": "ACMP 1009. Прыжки в длину", "category": "Сортировка", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=792", "difficulty": "Easy", "locked": true, "lockReason": "Откроется после следующего занятия" }
+  {
+    "category": "Сортировка",
+    "subtopics": [
+      {
+        "subtopic": "Сортировка 1",
+        "difficulty": "Easy",
+        "tasks": [
+          { "id": 1, "title": "ACMP 1231. Сортировка пузырьком", "url": "https://acmp.ru/index.asp?main=task&id_task=1231" },
+          { "id": 2, "title": "ACMP 1702. Сортировка выбором", "url": "https://acmp.ru/index.asp?main=task&id_task=1702" },
+          { "id": 3, "title": "ACMP 461. Выборы", "url": "https://acmp.ru/index.asp?main=task&id_task=461" },
+          { "id": 4, "title": "ACMP 314. Лексикографический порядок чисел", "url": "https://acmp.ru/index.asp?main=task&id_task=314" },
+          { "id": 5, "title": "ACMP 174. Свадьба", "url": "https://acmp.ru/index.asp?main=task&id_task=174" },
+          { "id": 6, "title": "ACMP 648. Азартный Шрэк", "url": "https://acmp.ru/index.asp?main=task&id_task=648" },
+          { "id": 7, "title": "ACMP 32. Годовой баланс", "url": "https://acmp.ru/index.asp?main=task&id_task=32" },
+          { "id": 8, "title": "ACMP 184. Рабочее время", "url": "https://acmp.ru/index.asp?main=task&id_task=184" },
+          { "id": 9, "title": "ACMP 1437. Маги", "url": "https://acmp.ru/index.asp?main=task&id_task=1437" },
+          { "id": 10, "title": "ACMP 178. Преобразование последовательности", "url": "https://acmp.ru/index.asp?main=task&id_task=178" },
+          { "id": 11, "title": "ACMP 475. Арифметическая прогрессия - 2", "url": "https://acmp.ru/index.asp?main=task&id_task=475" },
+          { "id": 12, "title": "ACMP 344. Ближайшие точки", "url": "https://acmp.ru/index.asp?main=task&id_task=344" }
+        ]
+      },
+      {
+        "subtopic": "Сортировка 2",
+        "difficulty": "Easy",
+        "locked": true,
+        "lockReason": "Откроется после следующего занятия",
+        "tasks": [
+          { "id": 13, "title": "ACMP 112. Армия", "url": "https://acmp.ru/index.asp?main=task&id_task=112" },
+          { "id": 14, "title": "ACMP 252. Сортировка масс", "url": "https://acmp.ru/index.asp?main=task&id_task=252" },
+          { "id": 15, "title": "ACMP 1168. Экзамены", "url": "https://acmp.ru/index.asp?main=task&id_task=41" },
+          { "id": 16, "title": "ACMP 1016. Ученики", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=791" },
+          { "id": 17, "title": "ACMP 1009. Прыжки в длину", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=792" }
+        ]
+      }
+    ]
+  }
 ]
