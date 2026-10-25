@@ -294,7 +294,7 @@ function render() {
                   >
                     <div class="flex items-center gap-2">
                       <span class="text-[10px] transform transition-transform ${isSubCollapsed ? '-rotate-90' : 'rotate-0'}">▼</span>
-                      <span>${isSubAllLocked ? '🔒 ' : '📌 '}${subName}</span>
+                      <span>${isSubAllLocked ? '🔒 ' : ' '}${subName}</span>
                     </div>
                     <span class="text-[11px] font-normal text-slate-500 dark:text-slate-400">
                       ${solvedInSub} / ${allSubTasks.length}
