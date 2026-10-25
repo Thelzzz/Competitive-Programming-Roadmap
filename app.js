@@ -303,7 +303,7 @@ function render() {
                   >
                     <div class="flex items-center gap-2">
                       <span class="text-[10px] transform transition-transform ${isSubCollapsed ? '-rotate-90' : 'rotate-0'}">▼</span>
-                      <span>${isSubAllLocked ? '🔒 ' : ''}${subName}</span>
+                      <span>${subName}${isSubAllLocked ? ' 🔒' : ''}</span>
                     </div>
 
                     <!-- ЕСЛИ ПОДТЕМА ЗАБЛОКИРОВАНА — СЧЁТЧИК СКРЫВАЕТСЯ -->
