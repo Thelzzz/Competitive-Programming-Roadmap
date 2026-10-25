@@ -87,21 +87,40 @@ window.toggleAllCategories = function() {
   render();
 };
 
-// 4. Отметка задач
-window.toggleTask = function(id) {
+// 4. Отметка задач + Конфетти
+window.toggleTask = function(id, event) {
   const task = tasks.find(t => t.id === id);
   if (task && task.locked) return; // Заблокированные задачи нельзя отметить
 
-  if (solvedIds.includes(id)) {
-    solvedIds = solvedIds.filter(item => item !== id);
-  } else {
+  const isNowSolved = !solvedIds.includes(id);
+
+  if (isNowSolved) {
     solvedIds.push(id);
+
+    // 🎉 Мини-салют прямо из точки клика!
+    const x = event ? event.clientX / window.innerWidth : 0.5;
+    const y = event ? event.clientY / window.innerHeight : 0.6;
+    
+    confetti({
+      particleCount: 30,
+      spread: 50,
+      origin: { x, y },
+      ticks: 150,
+      gravity: 1.2,
+      scalar: 0.75
+    });
+  } else {
+    solvedIds = solvedIds.filter(item => item !== id);
   }
+
   localStorage.setItem(STORAGE_KEY, JSON.stringify(solvedIds));
   render();
 
+  // 🏆 Огромный салют, если решены ВСЕ задачи роадмапа
   if (solvedIds.length === tasks.length && tasks.length > 0) {
-    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+    setTimeout(() => {
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+    }, 200);
   }
 };
 
@@ -152,7 +171,7 @@ function render() {
       currentStatusFilter === 'all' ? true :
       currentStatusFilter === 'solved' ? isSolved : !isSolved;
     
-    // Если задача под замком, не фильтруем её по сложности (она всё равно скрыта)
+    // Если задача под замком, не фильтруем её по сложности
     const matchesDiff = 
       currentDiffFilter === 'all' ? true : (!t.locked && t.difficulty === currentDiffFilter);
 
@@ -237,7 +256,7 @@ function render() {
 
             return `
               <div 
-                ${isLocked ? '' : `onclick="toggleTask(${t.id})"`}
+                ${isLocked ? '' : `onclick="toggleTask(${t.id}, event)"`}
                 class="flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 ${cardClasses}"
               >
                 <div class="flex items-center gap-3.5 flex-1 min-w-0 pr-3">
@@ -273,7 +292,7 @@ function render() {
                   </div>
                 </div>
                 
-                <!-- Сложность (отображается ТОЛЬКО если задача открыта) -->
+                <!-- Сложность -->
                 ${!isLocked ? `
                   <div class="flex-shrink-0">
                     <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
