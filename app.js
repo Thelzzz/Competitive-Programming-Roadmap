@@ -83,7 +83,7 @@ async function loadTasks() {
       return catItem;
     });
 
-    populateCategoryFilter();
+    //populateCategoryFilter();
     render();
   } catch (e) {
     console.error('Ошибка загрузки tasks.json:', e);
