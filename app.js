@@ -43,25 +43,44 @@ function applyTheme(theme) {
   localStorage.setItem(THEME_KEY, theme);
 }
 
-// 2. Загрузка задач (с поддержкой блоков)
+// 2. Загрузка задач (с глубокой вложенностью)
 async function loadTasks() {
   try {
     const res = await fetch('tasks.json');
     const rawData = await res.json();
     
-    // Если данные сгруппированы по блокам — разворачиваем и наследуем параметры
-    tasks = rawData.flatMap(item => {
-      if (item.tasks && Array.isArray(item.tasks)) {
-        return item.tasks.map(t => ({
-          category: item.category || 'Общее',
-          subtopic: item.subtopic || '',
-          difficulty: t.difficulty || item.difficulty || 'Easy',
-          locked: t.locked !== undefined ? t.locked : (item.locked || false),
-          lockReason: t.lockReason || item.lockReason || '',
+    tasks = rawData.flatMap(catItem => {
+      // 1. Формат с глубокой вложенностью: Категория -> subtopics -> tasks
+      if (catItem.subtopics && Array.isArray(catItem.subtopics)) {
+        return catItem.subtopics.flatMap(subItem => {
+          if (subItem.tasks && Array.isArray(subItem.tasks)) {
+            return subItem.tasks.map(t => ({
+              category: catItem.category || 'Общее',
+              subtopic: subItem.subtopic || '',
+              difficulty: t.difficulty || subItem.difficulty || catItem.difficulty || 'Easy',
+              locked: t.locked !== undefined ? t.locked : (subItem.locked !== undefined ? subItem.locked : (catItem.locked || false)),
+              lockReason: t.lockReason || subItem.lockReason || catItem.lockReason || '',
+              ...t
+            }));
+          }
+          return [];
+        });
+      }
+
+      // 2. Обычный блочный формат (если вдруг где-то используется)
+      if (catItem.tasks && Array.isArray(catItem.tasks)) {
+        return catItem.tasks.map(t => ({
+          category: catItem.category || 'Общее',
+          subtopic: catItem.subtopic || '',
+          difficulty: t.difficulty || catItem.difficulty || 'Easy',
+          locked: t.locked !== undefined ? t.locked : (catItem.locked || false),
+          lockReason: t.lockReason || catItem.lockReason || '',
           ...t
         }));
       }
-      return item; // Поддержка старого плоского формата (если где-то остался)
+
+      // 3. Старый плоский формат (для обратной совместимости)
+      return catItem;
     });
 
     populateCategoryFilter();
