@@ -66,7 +66,7 @@ function populateCategoryFilter() {
   });
 }
 
-// 3. Сворачивание
+// 3. Сворачивание тем
 window.toggleCategory = function(cat) {
   if (collapsedCategories.has(cat)) {
     collapsedCategories.delete(cat);
@@ -186,6 +186,7 @@ function render() {
 
     return `
       <section class="space-y-3 mb-6">
+        <!-- Шапка раздела -->
         <div 
           onclick="toggleCategory('${cat}')" 
           class="flex items-center justify-between p-2 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-800/80 hover:bg-slate-100/60 dark:hover:bg-slate-900/60 cursor-pointer select-none transition-all group"
@@ -213,47 +214,49 @@ function render() {
           </span>
         </div>
 
+        <!-- Список задач -->
         <div class="${isCollapsed ? 'hidden' : 'space-y-2.5 pl-1'}">
           ${catTasks.map(t => {
             const isSolved = solvedIds.includes(t.id);
             return `
-              <div class="flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 ${
-                isSolved 
-                  ? 'bg-slate-100/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/40 opacity-60' 
-                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm'
-              }">
+              <!-- Вся карточка кликабельна для отметки (onclick="toggleTask") -->
+              <div 
+                onclick="toggleTask(${t.id})"
+                class="flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 cursor-pointer select-none ${
+                  isSolved 
+                    ? 'bg-slate-100/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/40 opacity-60' 
+                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm'
+                }"
+              >
                 <div class="flex items-center gap-3.5 flex-1 min-w-0 pr-3">
+                  <!-- Чекбокс -->
                   <input 
                     type="checkbox" 
                     id="task-${t.id}" 
                     ${isSolved ? 'checked' : ''} 
-                    onchange="toggleTask(${t.id})"
-                    class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-blue-600 cursor-pointer accent-blue-600 flex-shrink-0"
+                    class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-blue-600 accent-blue-600 flex-shrink-0 pointer-events-none"
                   />
-                  <!-- Кликабельное название -->
+                  
+                  <!-- Название: при клике открывает сайт и НЕ отмечает задачу (благодаря stopPropagation) -->
                   <a 
                     href="${t.url}" 
                     target="_blank" 
                     rel="noopener noreferrer" 
+                    onclick="event.stopPropagation()"
                     class="text-sm sm:text-base font-medium truncate hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors ${
                       isSolved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'
                     }"
-                    title="Открыть задачу: ${t.title}"
+                    title="Перейти к задаче: ${t.title}"
                   >
                     ${t.title}
                   </a>
                 </div>
                 
-                <div class="flex items-center gap-2.5">
+                <!-- Только сложность (иконка ссылки удалена) -->
+                <div>
                   <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
                     ${t.difficulty}
                   </span>
-                  <!-- Иконка сбоку тоже осталась рабочей -->
-                  <a href="${t.url}" target="_blank" rel="noopener noreferrer" class="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" title="Открыть задачу">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
                 </div>
               </div>
             `;
