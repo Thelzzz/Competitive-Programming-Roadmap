@@ -50,7 +50,7 @@ async function loadTasks() {
     populateCategoryFilter();
     render();
   } catch (e) {
-    console.error('Причина ошибки:', e);
+    console.error('Ошибка загрузки tasks.json:', e);
     document.getElementById('task-list').innerHTML = 
       '<div class="text-center text-rose-500 py-10">Ошибка загрузки tasks.json</div>';
   }
@@ -90,7 +90,7 @@ window.toggleAllCategories = function() {
 // 4. Отметка задач
 window.toggleTask = function(id) {
   const task = tasks.find(t => t.id === id);
-  if (task && task.locked) return; // Защита от клика по заблокированным задачам
+  if (task && task.locked) return; // Заблокированные задачи нельзя отметить
 
   if (solvedIds.includes(id)) {
     solvedIds = solvedIds.filter(item => item !== id);
@@ -152,8 +152,9 @@ function render() {
       currentStatusFilter === 'all' ? true :
       currentStatusFilter === 'solved' ? isSolved : !isSolved;
     
+    // Если задача под замком, не фильтруем её по сложности (она всё равно скрыта)
     const matchesDiff = 
-      currentDiffFilter === 'all' ? true : t.difficulty === currentDiffFilter;
+      currentDiffFilter === 'all' ? true : (!t.locked && t.difficulty === currentDiffFilter);
 
     const matchesCat = 
       currentCategoryFilter === 'all' ? true : t.category === currentCategoryFilter;
@@ -224,7 +225,7 @@ function render() {
             const isSolved = solvedIds.includes(t.id);
             const isLocked = t.locked === true;
 
-            // Стили карточки в зависимости от статуса
+            // Стили карточки
             let cardClasses = '';
             if (isLocked) {
               cardClasses = 'bg-slate-100/40 dark:bg-slate-900/20 border-slate-200/60 dark:border-slate-800/40 opacity-60 cursor-not-allowed select-none border-dashed';
@@ -252,9 +253,9 @@ function render() {
                   }
                   
                   <div class="truncate">
-                    <!-- Заголовок / ссылка -->
+                    <!-- Заголовок: скрыт или ссылка -->
                     ${isLocked 
-                      ? `<span class="text-sm sm:text-base font-medium text-slate-500 dark:text-slate-400 select-none">${t.title}</span>`
+                      ? `<span class="text-sm sm:text-base font-medium italic text-slate-400 dark:text-slate-500 select-none">Скрытая задача</span>`
                       : `<a 
                           href="${t.url}" 
                           target="_blank" 
@@ -268,16 +269,18 @@ function render() {
                           ${t.title}
                         </a>`
                     }
-                    ${isLocked && t.lockReason ? `<p class="text-[11px] text-amber-600 dark:text-amber-400 font-medium">${t.lockReason}</p>` : ''}
+                    ${isLocked && t.lockReason ? `<p class="text-[11px] text-amber-600 dark:text-amber-400 font-medium not-italic">${t.lockReason}</p>` : ''}
                   </div>
                 </div>
                 
-                <!-- Сложность -->
-                <div class="flex-shrink-0">
-                  <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
-                    ${t.difficulty}
-                  </span>
-                </div>
+                <!-- Сложность (отображается ТОЛЬКО если задача открыта) -->
+                ${!isLocked ? `
+                  <div class="flex-shrink-0">
+                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
+                      ${t.difficulty}
+                    </span>
+                  </div>
+                ` : ''}
               </div>
             `;
           }).join('')}
