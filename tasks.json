@@ -13,5 +13,7 @@
   { "id": 12, "title": "ACMP 344. Ближайшие точки", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=344", "difficulty": "Easy" },
   { "id": 13, "title": "ACMP 112. Армия", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=112", "difficulty": "Hard" },
   { "id": 14, "title": "ACMP 252. Сортировка масс", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=252", "difficulty": "Medium", "locked": true, "lockReason": "Откроется после следующего занятия" },
-  { "id": 15, "title": "ACMP 41. Сортировка подсчетом", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=41", "difficulty": "Easy", "locked": true, "lockReason": "Откроется после следующего занятия" }
+  { "id": 15, "title": "ACMP 1168. Экзамены", "category": "Сортировка", "url": "https://acmp.ru/index.asp?main=task&id_task=41", "difficulty": "Easy", "locked": true, "lockReason": "Откроется после следующего занятия" },
+  { "id": 16, "title": "ACMP 1016. Ученики", "category": "Сортировка", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=791", "difficulty": "Easy", "locked": true, "lockReason": "Откроется после следующего занятия" },
+  { "id": 17, "title": "ACMP 1009. Прыжки в длину", "category": "Сортировка", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=792", "difficulty": "Easy", "locked": true, "lockReason": "Откроется после следующего занятия" }
 ]
