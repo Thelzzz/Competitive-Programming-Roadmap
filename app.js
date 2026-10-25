@@ -88,6 +88,9 @@ window.toggleAllCategories = function() {
 
 // 4. Отметка задач
 window.toggleTask = function(id) {
+  const task = tasks.find(t => t.id === id);
+  if (task && task.locked) return; // Защита от клика по заблокированным задачам
+
   if (solvedIds.includes(id)) {
     solvedIds = solvedIds.filter(item => item !== id);
   } else {
@@ -218,42 +221,58 @@ function render() {
         <div class="${isCollapsed ? 'hidden' : 'space-y-2.5 pl-1'}">
           ${catTasks.map(t => {
             const isSolved = solvedIds.includes(t.id);
+            const isLocked = t.locked === true;
+
+            // Стили карточки в зависимости от статуса
+            let cardClasses = '';
+            if (isLocked) {
+              cardClasses = 'bg-slate-100/40 dark:bg-slate-900/20 border-slate-200/60 dark:border-slate-800/40 opacity-60 cursor-not-allowed select-none border-dashed';
+            } else if (isSolved) {
+              cardClasses = 'bg-slate-100/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/40 opacity-60 cursor-pointer select-none';
+            } else {
+              cardClasses = 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm cursor-pointer select-none';
+            }
+
             return `
-              <!-- Вся карточка кликабельна для отметки (onclick="toggleTask") -->
               <div 
-                onclick="toggleTask(${t.id})"
-                class="flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 cursor-pointer select-none ${
-                  isSolved 
-                    ? 'bg-slate-100/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/40 opacity-60' 
-                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm'
-                }"
+                ${isLocked ? '' : `onclick="toggleTask(${t.id})"`}
+                class="flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 ${cardClasses}"
               >
                 <div class="flex items-center gap-3.5 flex-1 min-w-0 pr-3">
-                  <!-- Чекбокс -->
-                  <input 
-                    type="checkbox" 
-                    id="task-${t.id}" 
-                    ${isSolved ? 'checked' : ''} 
-                    class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-blue-600 accent-blue-600 flex-shrink-0 pointer-events-none"
-                  />
+                  <!-- Иконка: Замок или Чекбокс -->
+                  ${isLocked 
+                    ? `<span class="text-base select-none flex-shrink-0" title="${t.lockReason || 'Заблокировано'}">🔒</span>` 
+                    : `<input 
+                        type="checkbox" 
+                        id="task-${t.id}" 
+                        ${isSolved ? 'checked' : ''} 
+                        class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-blue-600 accent-blue-600 flex-shrink-0 pointer-events-none"
+                      />`
+                  }
                   
-                  <!-- Название: при клике открывает сайт и НЕ отмечает задачу (благодаря stopPropagation) -->
-                  <a 
-                    href="${t.url}" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    onclick="event.stopPropagation()"
-                    class="text-sm sm:text-base font-medium truncate hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors ${
-                      isSolved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'
-                    }"
-                    title="Перейти к задаче: ${t.title}"
-                  >
-                    ${t.title}
-                  </a>
+                  <div class="truncate">
+                    <!-- Заголовок / ссылка -->
+                    ${isLocked 
+                      ? `<span class="text-sm sm:text-base font-medium text-slate-500 dark:text-slate-400 select-none">${t.title}</span>`
+                      : `<a 
+                          href="${t.url}" 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          onclick="event.stopPropagation()"
+                          class="text-sm sm:text-base font-medium truncate hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors ${
+                            isSolved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'
+                          }"
+                          title="Перейти к задаче: ${t.title}"
+                        >
+                          ${t.title}
+                        </a>`
+                    }
+                    ${isLocked && t.lockReason ? `<p class="text-[11px] text-amber-600 dark:text-amber-400 font-medium">${t.lockReason}</p>` : ''}
+                  </div>
                 </div>
                 
-                <!-- Только сложность (иконка ссылки удалена) -->
-                <div>
+                <!-- Сложность -->
+                <div class="flex-shrink-0">
                   <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
                     ${t.difficulty}
                   </span>
