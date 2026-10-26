@@ -10,7 +10,7 @@
     tailwind.config = { darkMode: 'class' }
   </script>
 
-  <!-- Стили для всплывающей подсказки баллов (XP) -->
+  <!-- Стили подсказок баллов (XP) -->
   <style>
     .difficulty-badge {
       position: relative;
@@ -18,14 +18,13 @@
       user-select: none;
     }
 
-    /* Само всплывающее окошко */
     .difficulty-badge[data-tooltip]::before {
       content: attr(data-tooltip);
       position: absolute;
       bottom: 135%;
       left: 50%;
       transform: translateX(-50%);
-      background-color: #0f172a; /* Slate 900 */
+      background-color: #0f172a;
       color: #f8fafc;
       font-size: 11px;
       font-weight: 600;
@@ -41,7 +40,6 @@
       z-index: 50;
     }
 
-    /* Стрелочка тултипа */
     .difficulty-badge[data-tooltip]::after {
       content: "";
       position: absolute;
@@ -58,7 +56,6 @@
       z-index: 50;
     }
 
-    /* Показ при наведении */
     .difficulty-badge[data-tooltip]:hover::before,
     .difficulty-badge[data-tooltip]:hover::after {
       opacity: 1;
@@ -124,7 +121,7 @@
           <div id="points-bar" class="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-all duration-500" style="width: 0%"></div>
         </div>
       </div>
-    
+      
     </div>
 
     <!-- Фильтры -->
@@ -136,19 +133,16 @@
         <button onclick="setStatusFilter('solved')" id="filter-solved" class="px-3 py-1.5 rounded-md font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Решено</button>
       </div>
 
-      <!-- Выпадающие списки (Платформа, Категории, Сложность) -->
+      <!-- Выпадающие списки (Платформа, Разделы, Сложность) -->
       <div class="flex gap-2 flex-wrap sm:flex-nowrap">
-        <!-- НОВЫЙ ФИЛЬТР ПО ПЛАТФОРМЕ -->
         <select id="platform-filter" onchange="setPlatformFilter(this.value)" class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-xs sm:text-sm rounded-lg px-3 py-2 outline-none">
           <option value="all">Все платформы</option>
         </select>
-      
-        <!-- Категории -->
+
         <select id="category-filter" onchange="setCategoryFilter(this.value)" class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-xs sm:text-sm rounded-lg px-3 py-2 outline-none">
           <option value="all">Все разделы</option>
         </select>
-      
-        <!-- Сложность -->
+
         <select id="difficulty-filter" onchange="setDiffFilter(this.value)" class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-xs sm:text-sm rounded-lg px-3 py-2 outline-none">
           <option value="all">Любая сложность</option>
           <option value="Easy">Только Easy</option>
@@ -156,6 +150,7 @@
           <option value="Hard">Только Hard</option>
         </select>
       </div>
+    </div>
 
     <!-- Контейнер для задач по категориям -->
     <div id="task-list" class="space-y-6">
