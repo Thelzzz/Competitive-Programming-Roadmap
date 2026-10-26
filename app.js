@@ -12,6 +12,7 @@ let solvedIds = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 let currentStatusFilter = 'all';
 let currentDiffFilter = 'all';
 let currentCategoryFilter = 'all';
+let currentPlatformFilter = 'all';
 
 let collapsedCategories = new Set();
 let collapsedSubtopics = new Set();
@@ -29,7 +30,7 @@ function generateTaskId(url) {
     hash = ((hash << 5) - hash) + url.charCodeAt(i);
     hash |= 0;
   }
-  return 'task_' + Math.abs(hash); // например: "task_1849204"
+  return 'task_' + Math.abs(hash);
 }
 
 // Автоопределение платформы по URL
@@ -38,7 +39,7 @@ function getPlatformFromUrl(url) {
   const u = url.toLowerCase();
   
   if (u.includes('leetcode.com')) return 'LeetCode';
-  if (u.includes('codeforces.com')) return 'CodeForces';
+  if (u.includes('codeforces.com')) return 'Codeforces';
   if (u.includes('acmp.ru')) return 'ACMP';
   if (u.includes('timus.ru')) return 'Timus';
   if (u.includes('atcoder.jp')) return 'AtCoder';
@@ -46,7 +47,6 @@ function getPlatformFromUrl(url) {
   if (u.includes('informatics.msk.ru') || u.includes('informatics.mccme.ru')) return 'Informatics';
   if (u.includes('hackerrank.com')) return 'HackerRank';
   
-  // Если платформа незнакомая, берем домен (например, codewars.com)
   try {
     const domain = new URL(url).hostname.replace('www.', '');
     return domain;
@@ -82,19 +82,17 @@ function applyTheme(theme) {
   localStorage.setItem(THEME_KEY, theme);
 }
 
-// 2. Загрузка задач (с глубокой вложенностью)
+// 2. Загрузка задач
 async function loadTasks() {
   try {
     const res = await fetch('tasks.json');
     const rawData = await res.json();
     
     tasks = rawData.flatMap(catItem => {
-      // 1. Формат с глубокой вложенностью: Категория -> subtopics -> tasks
       if (catItem.subtopics && Array.isArray(catItem.subtopics)) {
         return catItem.subtopics.flatMap(subItem => {
           if (subItem.tasks && Array.isArray(subItem.tasks)) {
             return subItem.tasks.map(t => {
-              // Автоматический ID: берем ручной или генерируем из ссылки
               const taskId = t.id !== undefined ? String(t.id) : generateTaskId(t.url);
 
               return {
@@ -104,7 +102,7 @@ async function loadTasks() {
                 locked: t.locked !== undefined ? t.locked : (subItem.locked !== undefined ? subItem.locked : (catItem.locked || false)),
                 lockReason: t.lockReason || subItem.lockReason || catItem.lockReason || '',
                 ...t,
-                id: taskId // железно фиксируем уникальный id
+                id: taskId
               };
             });
           }
@@ -112,7 +110,6 @@ async function loadTasks() {
         });
       }
 
-      // 2. Обычный блочный формат (если где-то остался)
       if (catItem.tasks && Array.isArray(catItem.tasks)) {
         return catItem.tasks.map(t => {
           const taskId = t.id !== undefined ? String(t.id) : generateTaskId(t.url);
@@ -128,7 +125,6 @@ async function loadTasks() {
         });
       }
 
-      // 3. Старый плоский формат
       const taskId = catItem.id !== undefined ? String(catItem.id) : generateTaskId(catItem.url);
       return {
         ...catItem,
@@ -137,6 +133,7 @@ async function loadTasks() {
     });
 
     populatePlatformFilter();
+    populateCategoryFilter();
     render();
   } catch (e) {
     console.error('Ошибка загрузки tasks.json:', e);
@@ -184,7 +181,6 @@ window.toggleTask = function(id, event) {
   if (isNowSolved) {
     solvedIds.push(id);
 
-    // Салют из точки клика
     const x = event ? event.clientX / window.innerWidth : 0.5;
     const y = event ? event.clientY / window.innerHeight : 0.6;
     
@@ -203,7 +199,6 @@ window.toggleTask = function(id, event) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(solvedIds));
   render();
 
-  // Проверяем 100% только среди открытых задач!
   const unlockedTasks = tasks.filter(t => !t.locked);
   const unlockedSolved = unlockedTasks.filter(t => solvedIds.includes(t.id));
   
@@ -223,16 +218,16 @@ window.resetProgress = function() {
 };
 
 // 5. Фильтры
-let currentPlatformFilter = 'all';
-
 window.setStatusFilter = function(status) {
   currentStatusFilter = status;
   ['all', 'unsolved', 'solved'].forEach(s => {
     const btn = document.getElementById(`filter-${s}`);
-    if (s === status) {
-      btn.className = 'px-3 py-1.5 rounded-md font-medium bg-slate-900 dark:bg-slate-800 text-white transition-colors';
-    } else {
-      btn.className = 'px-3 py-1.5 rounded-md font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors';
+    if (btn) {
+      if (s === status) {
+        btn.className = 'px-3 py-1.5 rounded-md font-medium bg-slate-900 dark:bg-slate-800 text-white transition-colors';
+      } else {
+        btn.className = 'px-3 py-1.5 rounded-md font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors';
+      }
     }
   });
   render();
@@ -248,13 +243,11 @@ window.setCategoryFilter = function(category) {
   render();
 };
 
-// НОВЫЙ ФИЛЬТР ПО ПЛАТФОРМЕ
 window.setPlatformFilter = function(platform) {
   currentPlatformFilter = platform;
   render();
 };
 
-// Автоматическое заполнение выпадающего списка платформ
 function populatePlatformFilter() {
   const platformSelect = document.getElementById('platform-filter');
   if (!platformSelect) return;
@@ -277,20 +270,43 @@ function populatePlatformFilter() {
   platformSelect.value = currentVal || 'all';
 }
 
+function populateCategoryFilter() {
+  const categorySelect = document.getElementById('category-filter');
+  if (!categorySelect) return;
+
+  const categories = [...new Set(tasks.map(t => t.category || 'Общее'))];
+  const currentVal = categorySelect.value;
+  categorySelect.innerHTML = '<option value="all">Все разделы</option>';
+  categories.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    categorySelect.appendChild(opt);
+  });
+  categorySelect.value = currentVal || 'all';
+}
+
 // 6. Отрисовка
 function render() {
-  const unlockedTasks = tasks.filter(t => !t.locked);
+  // Базовый пул открытых задач с учетом активных фильтров категории, сложности и платформы
+  const contextTasks = tasks.filter(t => {
+    if (t.locked) return false;
+    const matchesDiff = currentDiffFilter === 'all' || t.difficulty === currentDiffFilter;
+    const matchesCat = currentCategoryFilter === 'all' || (t.category || 'Общее') === currentCategoryFilter;
+    const matchesPlatform = currentPlatformFilter === 'all' || (t.url && getPlatformFromUrl(t.url) === currentPlatformFilter);
+    return matchesDiff && matchesCat && matchesPlatform;
+  });
 
-  // 1. Подсчет по количеству задач
-  const total = unlockedTasks.length;
-  const solved = unlockedTasks.filter(t => solvedIds.includes(t.id)).length;
+  // 1. Подсчет по количеству задач для текущей выборки
+  const total = contextTasks.length;
+  const solved = contextTasks.filter(t => solvedIds.includes(t.id)).length;
   const taskPercent = total > 0 ? Math.round((solved / total) * 100) : 0;
 
-  // 2. Подсчет по баллам (Easy = 1, Medium = 2, Hard = 3)
+  // 2. Подсчет по баллам (XP) для текущей выборки
   let totalPoints = 0;
   let earnedPoints = 0;
 
-  unlockedTasks.forEach(t => {
+  contextTasks.forEach(t => {
     const pts = XP_MAP[t.difficulty] || 1;
     totalPoints += pts;
     if (solvedIds.includes(t.id)) {
@@ -312,7 +328,7 @@ function render() {
   if (pointsTextEl) pointsTextEl.innerText = `${earnedPoints} / ${totalPoints} (${pointsPercent}%)`;
   if (pointsBarEl) pointsBarEl.style.width = `${pointsPercent}%`;
 
-  // ФИЛЬТРАЦИЯ ЗАДАЧ (С учетом платформы)
+  // Задачи для отображения (дополнительно учитывается фильтр статуса "Решено / Не решено")
   const filtered = tasks.filter(t => {
     const isSolved = solvedIds.includes(t.id);
     const matchesStatus = 
@@ -323,9 +339,8 @@ function render() {
       currentDiffFilter === 'all' ? true : (!t.locked && t.difficulty === currentDiffFilter);
 
     const matchesCat = 
-      currentCategoryFilter === 'all' ? true : t.category === currentCategoryFilter;
+      currentCategoryFilter === 'all' ? true : (t.category || 'Общее') === currentCategoryFilter;
 
-    // Проверка платформы по ссылке
     const matchesPlatform = 
       currentPlatformFilter === 'all' ? true : (t.url && getPlatformFromUrl(t.url) === currentPlatformFilter);
 
@@ -355,14 +370,11 @@ function render() {
   listContainer.innerHTML = headerControls + activeCategories.map(cat => {
     const catTasks = filtered.filter(t => (t.category || 'Общее') === cat);
     
-    // Считаем прогресс категории только по открытым задачам
-    const allCatTasks = tasks.filter(t => (t.category || 'Общее') === cat);
-    const unlockedCatTasks = allCatTasks.filter(t => !t.locked);
-    const solvedInCat = unlockedCatTasks.filter(t => solvedIds.includes(t.id)).length;
+    // Считаем прогресс категории динамически под выбранные фильтры
+    const catContextTasks = contextTasks.filter(t => (t.category || 'Общее') === cat);
+    const solvedInCat = catContextTasks.filter(t => solvedIds.includes(t.id)).length;
     
     const isCollapsed = collapsedCategories.has(cat);
-
-    // Группировка задач внутри темы по подтемам (subtopic)
     const subtopicNames = [...new Set(catTasks.map(t => t.subtopic || ''))];
 
     return `
@@ -390,9 +402,9 @@ function render() {
             </h2>
           </div>
 
-          <!-- Счетчик в категории -->
+          <!-- Счетчик в категории (динамический под фильтры) -->
           <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-            ${unlockedCatTasks.length > 0 ? `${solvedInCat} / ${unlockedCatTasks.length}` : '🔒'}
+            ${catContextTasks.length > 0 ? `${solvedInCat} / ${catContextTasks.length}` : '🔒'}
           </span>
         </div>
 
@@ -403,8 +415,11 @@ function render() {
             const subKey = `${cat}_${subName}`;
             const isSubCollapsed = collapsedSubtopics.has(subKey);
 
+            // Динамический подсчет для подтемы
+            const subContextTasks = contextTasks.filter(t => (t.category || 'Общее') === cat && (t.subtopic || '') === subName);
+            const solvedInSub = subContextTasks.filter(t => solvedIds.includes(t.id)).length;
+
             const allSubTasks = tasks.filter(t => (t.category || 'Общее') === cat && (t.subtopic || '') === subName);
-            const solvedInSub = allSubTasks.filter(t => solvedIds.includes(t.id)).length;
             const isSubAllLocked = allSubTasks.length > 0 && allSubTasks.every(t => t.locked);
 
             return `
@@ -420,10 +435,10 @@ function render() {
                       <span>${subName}${isSubAllLocked ? ' 🔒' : ''}</span>
                     </div>
 
-                    <!-- ЕСЛИ ПОДТЕМА ЗАБЛОКИРОВАНА — СЧЁТЧИК СКРЫВАЕТСЯ -->
+                    <!-- Счетчик подтемы -->
                     ${!isSubAllLocked ? `
                       <span class="text-[11px] font-normal text-slate-500 dark:text-slate-400">
-                        ${solvedInSub} / ${allSubTasks.length}
+                        ${solvedInSub} / ${subContextTasks.length}
                       </span>
                     ` : ''}
                   </div>
@@ -431,7 +446,6 @@ function render() {
 
                 <div class="${isSubCollapsed ? 'hidden' : 'space-y-2'}">
                   ${isSubAllLocked ? `
-                    <!-- ЕСЛИ ПОДТЕМА ЗАБЛОКИРОВАНА: ТОЛЬКО ЗНАЧОК И ПРИЧИНА -->
                     <div class="py-7 px-4 flex flex-col items-center justify-center text-center bg-slate-100/40 dark:bg-slate-900/20 rounded-xl border border-dashed border-slate-300 dark:border-slate-800">
                       <span class="text-3xl mb-2 select-none">🔒</span>
                       <p class="text-xs font-medium text-slate-500 dark:text-slate-400">
@@ -490,7 +504,7 @@ function render() {
                         <!-- Правая часть: подсказка (i) + сложность -->
                         ${!isLocked ? `
                           <div class="flex items-center gap-2.5 flex-shrink-0">
-                            <!-- МГНОВЕННАЯ ПОДСКАЗКА "i" -->
+                            <!-- Подсказка "i" -->
                             ${t.note ? `
                               <div class="relative group/tip flex items-center">
                                 <span 
@@ -510,7 +524,7 @@ function render() {
                               </div>
                             ` : ''}
 
-                            <!-- Сложность (баллы показываются при наведении) -->
+                            <!-- Сложность (баллы во всплывающем тултипе) -->
                             <span 
                               onclick="event.stopPropagation()"
                               class="difficulty-badge text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}"
