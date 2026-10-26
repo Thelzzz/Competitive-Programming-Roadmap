@@ -16,6 +16,16 @@ const diffColors = {
   Hard: 'text-rose-700 bg-rose-100 border-rose-300 dark:text-rose-400 dark:bg-rose-950/60 dark:border-rose-800/60'
 };
 
+function generateTaskId(url) {
+  if (!url) return 'task_' + Math.random().toString(36).substring(2, 9);
+  let hash = 0;
+  for (let i = 0; i < url.length; i++) {
+    hash = ((hash << 5) - hash) + url.charCodeAt(i);
+    hash |= 0;
+  }
+  return 'task_' + Math.abs(hash); // например: "task_1849204"
+}
+
 // 1. Тема
 function initTheme() {
   const savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
@@ -54,33 +64,47 @@ async function loadTasks() {
       if (catItem.subtopics && Array.isArray(catItem.subtopics)) {
         return catItem.subtopics.flatMap(subItem => {
           if (subItem.tasks && Array.isArray(subItem.tasks)) {
-            return subItem.tasks.map(t => ({
-              category: catItem.category || 'Общее',
-              subtopic: subItem.subtopic || '',
-              difficulty: t.difficulty || subItem.difficulty || catItem.difficulty || 'Easy',
-              locked: t.locked !== undefined ? t.locked : (subItem.locked !== undefined ? subItem.locked : (catItem.locked || false)),
-              lockReason: t.lockReason || subItem.lockReason || catItem.lockReason || '',
-              ...t
-            }));
+            return subItem.tasks.map(t => {
+              // Автоматический ID: берем ручной или генерируем из ссылки
+              const taskId = t.id !== undefined ? String(t.id) : generateTaskId(t.url);
+
+              return {
+                category: catItem.category || 'Общее',
+                subtopic: subItem.subtopic || '',
+                difficulty: t.difficulty || subItem.difficulty || catItem.difficulty || 'Easy',
+                locked: t.locked !== undefined ? t.locked : (subItem.locked !== undefined ? subItem.locked : (catItem.locked || false)),
+                lockReason: t.lockReason || subItem.lockReason || catItem.lockReason || '',
+                ...t,
+                id: taskId // железно фиксируем уникальный id
+              };
+            });
           }
           return [];
         });
       }
 
-      // 2. Обычный блочный формат (если вдруг где-то используется)
+      // 2. Обычный блочный формат (если где-то остался)
       if (catItem.tasks && Array.isArray(catItem.tasks)) {
-        return catItem.tasks.map(t => ({
-          category: catItem.category || 'Общее',
-          subtopic: catItem.subtopic || '',
-          difficulty: t.difficulty || catItem.difficulty || 'Easy',
-          locked: t.locked !== undefined ? t.locked : (catItem.locked || false),
-          lockReason: t.lockReason || catItem.lockReason || '',
-          ...t
-        }));
+        return catItem.tasks.map(t => {
+          const taskId = t.id !== undefined ? String(t.id) : generateTaskId(t.url);
+          return {
+            category: catItem.category || 'Общее',
+            subtopic: catItem.subtopic || '',
+            difficulty: t.difficulty || catItem.difficulty || 'Easy',
+            locked: t.locked !== undefined ? t.locked : (catItem.locked || false),
+            lockReason: t.lockReason || catItem.lockReason || '',
+            ...t,
+            id: taskId
+          };
+        });
       }
 
-      // 3. Старый плоский формат (для обратной совместимости)
-      return catItem;
+      // 3. Старый плоский формат
+      const taskId = catItem.id !== undefined ? String(catItem.id) : generateTaskId(catItem.url);
+      return {
+        ...catItem,
+        id: taskId
+      };
     });
 
     render();
@@ -340,7 +364,7 @@ function render() {
 
                     return `
                       <div 
-                        ${isLocked ? '' : `onclick="toggleTask(${t.id}, event)"`}
+                        ${isLocked ? '' : `onclick="toggleTask('${t.id}', event)"`}
                         class="flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 ${cardClasses}"
                       >
                         <div class="flex items-center gap-3.5 flex-1 min-w-0 pr-3">
