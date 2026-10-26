@@ -15,6 +15,7 @@
           { "title": "ACMP 174. Свадьба", "url": "https://acmp.ru/index.asp?main=task&id_task=174" },
           { "title": "ACMP 32. Годовой баланс", "url": "https://acmp.ru/index.asp?main=task&id_task=32" },
           { "title": "ACMP 178. Преобразование последовательности", "url": "https://acmp.ru/index.asp?main=task&id_task=178" },
+          { "title": "ACMP 522. Похожие массивы", "url": "https://acmp.ru/index.asp?main=task&id_task=522", "note": "Запрещено использовать любые структуры данных, кроме массива" },
           { "title": "ACMP 1437. Маги", "url": "https://acmp.ru/index.asp?main=task&id_task=1437" },
           { "title": "ACMP 184. Рабочее время", "url": "https://acmp.ru/index.asp?main=task&id_task=184" },
           { "title": "ACMP 475. Арифметическая прогрессия - 2", "url": "https://acmp.ru/index.asp?main=task&id_task=475" },
