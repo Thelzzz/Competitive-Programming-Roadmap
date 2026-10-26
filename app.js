@@ -1,6 +1,12 @@
 const STORAGE_KEY = 'roadmap_solved_tasks';
 const THEME_KEY = 'roadmap_theme';
 
+const diffPoints = {
+  Easy: 1,
+  Medium: 2,
+  Hard: 3
+};
+
 let tasks = [];
 let solvedIds = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 let currentStatusFilter = 'all';
@@ -218,14 +224,40 @@ window.setCategoryFilter = function(category) {
 
 // 6. Отрисовка
 function render() {
-  // ОБЩИЙ ПРОГРЕСС: учитываем только открытые задачи!
   const unlockedTasks = tasks.filter(t => !t.locked);
+
+  // 1. Подсчет по количеству задач
   const total = unlockedTasks.length;
   const solved = unlockedTasks.filter(t => solvedIds.includes(t.id)).length;
-  const percent = total > 0 ? Math.round((solved / total) * 100) : 0;
+  const taskPercent = total > 0 ? Math.round((solved / total) * 100) : 0;
 
-  document.getElementById('progress-text').innerText = `${solved} / ${total} (${percent}%)`;
-  document.getElementById('progress-bar').style.width = `${percent}%`;
+  // 2. Подсчет по баллам (Easy = 1, Medium = 2, Hard = 3)
+  let totalPoints = 0;
+  let earnedPoints = 0;
+
+  unlockedTasks.forEach(t => {
+    const pts = diffPoints[t.difficulty] || 1;
+    totalPoints += pts;
+    if (solvedIds.includes(t.id)) {
+      earnedPoints += pts;
+    }
+  });
+
+  const pointsPercent = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
+
+  // Обновляем шкалу задач
+  const progressTextEl = document.getElementById('progress-text');
+  const progressBarEl = document.getElementById('progress-bar');
+  if (progressTextEl) progressTextEl.innerText = `${solved} / ${total} (${taskPercent}%)`;
+  if (progressBarEl) progressBarEl.style.width = `${taskPercent}%`;
+
+  // Обновляем шкалу баллов
+  const pointsTextEl = document.getElementById('points-text');
+  const pointsBarEl = document.getElementById('points-bar');
+  if (pointsTextEl) pointsTextEl.innerText = `${earnedPoints} / ${totalPoints} (${pointsPercent}%)`;
+  if (pointsBarEl) pointsBarEl.style.width = `${pointsPercent}%`;
+  // ... дальше ваш остальной код render()
+
 
   const filtered = tasks.filter(t => {
     const isSolved = solvedIds.includes(t.id);
@@ -425,7 +457,7 @@ function render() {
 
                             <!-- Сложность -->
                             <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
-                              ${t.difficulty}
+                              ${t.difficulty} • +${diffPoints[t.difficulty] || 1} XP
                             </span>
                           </div>
                         ` : ''}
