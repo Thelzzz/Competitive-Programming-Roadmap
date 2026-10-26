@@ -32,6 +32,29 @@ function generateTaskId(url) {
   return 'task_' + Math.abs(hash); // например: "task_1849204"
 }
 
+// Автоопределение платформы по URL
+function getPlatformFromUrl(url) {
+  if (!url) return 'Другое';
+  const u = url.toLowerCase();
+  
+  if (u.includes('leetcode.com')) return 'LeetCode';
+  if (u.includes('codeforces.com')) return 'CodeForces';
+  if (u.includes('acmp.ru')) return 'ACMP';
+  if (u.includes('timus.ru')) return 'Timus';
+  if (u.includes('atcoder.jp')) return 'AtCoder';
+  if (u.includes('stepik.org')) return 'Stepik';
+  if (u.includes('informatics.msk.ru') || u.includes('informatics.mccme.ru')) return 'Informatics';
+  if (u.includes('hackerrank.com')) return 'HackerRank';
+  
+  // Если платформа незнакомая, берем домен (например, codewars.com)
+  try {
+    const domain = new URL(url).hostname.replace('www.', '');
+    return domain;
+  } catch (e) {
+    return 'Другое';
+  }
+}
+
 // 1. Тема
 function initTheme() {
   const savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
@@ -113,6 +136,7 @@ async function loadTasks() {
       };
     });
 
+    populatePlatformFilter();
     render();
   } catch (e) {
     console.error('Ошибка загрузки tasks.json:', e);
@@ -199,6 +223,8 @@ window.resetProgress = function() {
 };
 
 // 5. Фильтры
+let currentPlatformFilter = 'all';
+
 window.setStatusFilter = function(status) {
   currentStatusFilter = status;
   ['all', 'unsolved', 'solved'].forEach(s => {
@@ -221,6 +247,35 @@ window.setCategoryFilter = function(category) {
   currentCategoryFilter = category;
   render();
 };
+
+// НОВЫЙ ФИЛЬТР ПО ПЛАТФОРМЕ
+window.setPlatformFilter = function(platform) {
+  currentPlatformFilter = platform;
+  render();
+};
+
+// Автоматическое заполнение выпадающего списка платформ
+function populatePlatformFilter() {
+  const platformSelect = document.getElementById('platform-filter');
+  if (!platformSelect) return;
+
+  const platforms = new Set();
+  tasks.forEach(t => {
+    if (t.url) {
+      platforms.add(getPlatformFromUrl(t.url));
+    }
+  });
+
+  const currentVal = platformSelect.value;
+  platformSelect.innerHTML = '<option value="all">Все платформы</option>';
+  Array.from(platforms).sort().forEach(platform => {
+    const opt = document.createElement('option');
+    opt.value = platform;
+    opt.textContent = platform;
+    platformSelect.appendChild(opt);
+  });
+  platformSelect.value = currentVal || 'all';
+}
 
 // 6. Отрисовка
 function render() {
@@ -256,9 +311,8 @@ function render() {
   const pointsBarEl = document.getElementById('points-bar');
   if (pointsTextEl) pointsTextEl.innerText = `${earnedPoints} / ${totalPoints} (${pointsPercent}%)`;
   if (pointsBarEl) pointsBarEl.style.width = `${pointsPercent}%`;
-  // ... дальше ваш остальной код render()
 
-
+  // ФИЛЬТРАЦИЯ ЗАДАЧ (С учетом платформы)
   const filtered = tasks.filter(t => {
     const isSolved = solvedIds.includes(t.id);
     const matchesStatus = 
@@ -271,7 +325,11 @@ function render() {
     const matchesCat = 
       currentCategoryFilter === 'all' ? true : t.category === currentCategoryFilter;
 
-    return matchesStatus && matchesDiff && matchesCat;
+    // Проверка платформы по ссылке
+    const matchesPlatform = 
+      currentPlatformFilter === 'all' ? true : (t.url && getPlatformFromUrl(t.url) === currentPlatformFilter);
+
+    return matchesStatus && matchesDiff && matchesCat && matchesPlatform;
   });
 
   const listContainer = document.getElementById('task-list');
@@ -332,7 +390,7 @@ function render() {
             </h2>
           </div>
 
-          <!-- Счетчик в категории (показывает цифры только если есть открытые задачи) -->
+          <!-- Счетчик в категории -->
           <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
             ${unlockedCatTasks.length > 0 ? `${solvedInCat} / ${unlockedCatTasks.length}` : '🔒'}
           </span>
@@ -442,13 +500,11 @@ function render() {
                                   i
                                 </span>
 
-                                <!-- Всплывающее окно (без задержки, с нормальным текстом) -->
                                 <div class="absolute right-0 bottom-full mb-2 hidden group-hover/tip:block z-30 w-64 p-3 rounded-xl bg-slate-900 text-slate-100 text-xs sm:text-sm leading-relaxed shadow-2xl border border-slate-700 pointer-events-none">
                                   <div class="font-bold text-amber-400 mb-1 flex items-center gap-1">
                                     <span>⚠️ Внимание</span>
                                   </div>
                                   <div>${t.note}</div>
-                                  <!-- Стрелочка вниз -->
                                   <div class="absolute top-full right-2.5 border-4 border-transparent border-t-slate-900"></div>
                                 </div>
                               </div>
