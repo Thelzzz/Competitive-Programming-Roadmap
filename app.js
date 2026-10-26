@@ -288,10 +288,7 @@ function populateCategoryFilter() {
 
 // 6. Отрисовка
 function render() {
-  // 6. Отрисовка
-function render() {
-  // Пул задач для верхних шкал прогресса:
-  // Учитывает сложность и платформу, но НЕ зависит от выбранной категории (раздела)
+  // Пул для верхних шкал прогресса (НЕ зависит от категории)
   const progressTasks = tasks.filter(t => {
     if (t.locked) return false;
     const matchesDiff = currentDiffFilter === 'all' || t.difficulty === currentDiffFilter;
@@ -299,12 +296,12 @@ function render() {
     return matchesDiff && matchesPlatform;
   });
 
-  // 1. Подсчет по количеству задач для верхних шкал
+  // 1. Подсчет по количеству задач
   const total = progressTasks.length;
   const solved = progressTasks.filter(t => solvedIds.includes(t.id)).length;
   const taskPercent = total > 0 ? Math.round((solved / total) * 100) : 0;
 
-  // 2. Подсчет по баллам (XP) для верхних шкал
+  // 2. Подсчет по баллам (XP)
   let totalPoints = 0;
   let earnedPoints = 0;
 
@@ -318,33 +315,28 @@ function render() {
 
   const pointsPercent = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
 
-  // Обновляем шкалу задач
+  // Обновляем шкалы
   const progressTextEl = document.getElementById('progress-text');
   const progressBarEl = document.getElementById('progress-bar');
   if (progressTextEl) progressTextEl.innerText = `${solved} / ${total} (${taskPercent}%)`;
   if (progressBarEl) progressBarEl.style.width = `${taskPercent}%`;
 
-  // Обновляем шкалу баллов
   const pointsTextEl = document.getElementById('points-text');
   const pointsBarEl = document.getElementById('points-bar');
   if (pointsTextEl) pointsTextEl.innerText = `${earnedPoints} / ${totalPoints} (${pointsPercent}%)`;
   if (pointsBarEl) pointsBarEl.style.width = `${pointsPercent}%`;
 
-  // Задачи для отображения (дополнительно учитывается фильтр статуса "Решено / Не решено")
+  // Задачи для отображения
   const filtered = tasks.filter(t => {
-    // 1. Фильтр раздела должен совпадать всегда
     const matchesCat = 
       currentCategoryFilter === 'all' ? true : (t.category || 'Общее') === currentCategoryFilter;
     if (!matchesCat) return false;
 
-    // 2. ИММУНИТЕТ ДЛЯ ЗАБЛОКИРОВАННЫХ:
-    // Они показываются ВСЕГДА (независимо от платформы и сложности).
-    // Скрываются только если пользователь явно нажал "Только решено".
+    // Иммунитет для заблокированных: всегда видны (если не включен фильтр "Только решено")
     if (t.locked) {
       return currentStatusFilter !== 'solved';
     }
 
-    // 3. Стандартная фильтрация для открытых задач
     const isSolved = solvedIds.includes(t.id);
     const matchesStatus = 
       currentStatusFilter === 'all' ? true :
@@ -382,7 +374,7 @@ function render() {
   listContainer.innerHTML = headerControls + activeCategories.map(cat => {
     const catTasks = filtered.filter(t => (t.category || 'Общее') === cat);
     
-    // Считаем прогресс категории динамически под выбранные фильтры
+    // Динамический подсчет для категории
     const catContextTasks = progressTasks.filter(t => (t.category || 'Общее') === cat);
     const solvedInCat = catContextTasks.filter(t => solvedIds.includes(t.id)).length;
     
@@ -414,7 +406,7 @@ function render() {
             </h2>
           </div>
 
-          <!-- Счетчик в категории (динамический под фильтры) -->
+          <!-- Счетчик в категории -->
           <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
             ${catContextTasks.length > 0 ? `${solvedInCat} / ${catContextTasks.length}` : '🔒'}
           </span>
