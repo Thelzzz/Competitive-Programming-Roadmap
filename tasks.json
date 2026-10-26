@@ -23,6 +23,7 @@
           { "title": "ACMP 184. Рабочее время", "url": "https://acmp.ru/index.asp?main=task&id_task=184" },
           { "title": "ACMP 475. Арифметическая прогрессия - 2", "url": "https://acmp.ru/index.asp?main=task&id_task=475" },
           { "title": "ACMP 344. Ближайшие точки", "url": "https://acmp.ru/index.asp?main=task&id_task=344", "difficulty": "Medium" }
+          { "title": "ACMP 758. Веревочный мост", "url": "https://acmp.ru/index.asp?main=task&id_task=758", "difficulty": "Hard" }
         ]
       },
       {
@@ -36,7 +37,8 @@
           { "title": "ACMP 252. Сортировка масс", "url": "https://acmp.ru/index.asp?main=task&id_task=252" },
           { "title": "ACMP 1168. Экзамены", "url": "https://acmp.ru/index.asp?main=task&id_task=41" },
           { "title": "ACMP 1016. Ученики", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=791" },
-          { "title": "ACMP 1009. Прыжки в длину", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=792" }
+          { "title": "ACMP 1009. Прыжки в длину", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=792" },
+          { "title": "ACMP 635. Интернет-олимпиады", "url": "https://acmp.ru/index.asp?main=task&id_task=635" }
         ]
       }
     ]
