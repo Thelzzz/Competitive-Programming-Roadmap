@@ -1,7 +1,7 @@
 const STORAGE_KEY = 'roadmap_solved_tasks';
 const THEME_KEY = 'roadmap_theme';
 
-const diffPoints = {
+const XP_MAP = {
   Easy: 1,
   Medium: 2,
   Hard: 3
@@ -371,7 +371,6 @@ function render() {
                   </div>
                 ` : ''}
 
-                <!-- Список задач подтемы -->
                 <div class="${isSubCollapsed ? 'hidden' : 'space-y-2'}">
                   ${isSubAllLocked ? `
                     <!-- ЕСЛИ ПОДТЕМА ЗАБЛОКИРОВАНА: ТОЛЬКО ЗНАЧОК И ПРИЧИНА -->
@@ -455,9 +454,13 @@ function render() {
                               </div>
                             ` : ''}
 
-                            <!-- Сложность -->
-                            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
-                              ${t.difficulty} • +${diffPoints[t.difficulty] || 1} XP
+                            <!-- Сложность (баллы показываются при наведении) -->
+                            <span 
+                              onclick="event.stopPropagation()"
+                              class="difficulty-badge text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}"
+                              data-tooltip="+${diffPoints[t.difficulty] || 1} XP за решение"
+                            >
+                              ${t.difficulty}
                             </span>
                           </div>
                         ` : ''}
