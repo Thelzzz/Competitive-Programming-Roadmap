@@ -378,41 +378,52 @@ function render() {
                               />`
                           }
                           
-                          <div class="truncate flex-1 min-w-0">
+                          <div class="truncate">
                             ${isLocked 
                               ? `<span class="text-sm sm:text-base font-medium italic text-slate-400 dark:text-slate-500 select-none">Скрытая задача</span>`
-                              : `<div class="flex items-center gap-1.5 truncate">
-                                  <a 
-                                    href="${t.url}" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
-                                    onclick="event.stopPropagation()"
-                                    class="text-sm sm:text-base font-medium truncate hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors ${
-                                      isSolved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'
-                                    }"
-                                    title="Перейти к задаче: ${t.title}"
-                                  >
-                                    ${t.title}
-                                  </a>
-
-                                  <!-- КРУЖОЧЕК "i" (появляется, если у задачи есть "note") -->
-                                  ${t.note ? `
-                                    <span 
-                                      onclick="event.stopPropagation(); alert('${t.note.replace(/'/g, "\\'")}')"
-                                      title="${t.note}"
-                                      class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-800/80 text-[10px] font-serif font-bold cursor-help flex-shrink-0 hover:scale-110 transition-transform select-none"
-                                    >
-                                      i
-                                    </span>
-                                  ` : ''}
-                                </div>`
+                              : `<a 
+                                  href="${t.url}" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  onclick="event.stopPropagation()"
+                                  class="text-sm sm:text-base font-medium truncate hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors ${
+                                    isSolved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'
+                                  }"
+                                  title="Перейти к задаче: ${t.title}"
+                                >
+                                  ${t.title}
+                                </a>`
                             }
                             ${isLocked && t.lockReason ? `<p class="text-[11px] text-amber-600 dark:text-amber-400 font-medium not-italic">${t.lockReason}</p>` : ''}
                           </div>
                         </div>
                         
+                        <!-- Правая часть: подсказка (i) + сложность -->
                         ${!isLocked ? `
-                          <div class="flex-shrink-0">
+                          <div class="flex items-center gap-2.5 flex-shrink-0">
+                            <!-- МГНОВЕННАЯ ПОДСКАЗКА "i" -->
+                            ${t.note ? `
+                              <div class="relative group/tip flex items-center">
+                                <span 
+                                  onclick="event.stopPropagation()"
+                                  class="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-700 text-xs font-serif font-bold flex items-center justify-center cursor-pointer hover:scale-110 hover:bg-amber-200 dark:hover:bg-amber-900 transition-all select-none shadow-sm"
+                                >
+                                  i
+                                </span>
+
+                                <!-- Всплывающее окно (без задержки, с нормальным текстом) -->
+                                <div class="absolute right-0 bottom-full mb-2 hidden group-hover/tip:block z-30 w-64 p-3 rounded-xl bg-slate-900 text-slate-100 text-xs sm:text-sm leading-relaxed shadow-2xl border border-slate-700 pointer-events-none">
+                                  <div class="font-bold text-amber-400 mb-1 flex items-center gap-1">
+                                    <span>⚠️ Внимание</span>
+                                  </div>
+                                  <div>${t.note}</div>
+                                  <!-- Стрелочка вниз -->
+                                  <div class="absolute top-full right-2.5 border-4 border-transparent border-t-slate-900"></div>
+                                </div>
+                              </div>
+                            ` : ''}
+
+                            <!-- Сложность -->
                             <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}">
                               ${t.difficulty}
                             </span>
