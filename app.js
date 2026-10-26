@@ -236,7 +236,7 @@ function render() {
   let earnedPoints = 0;
 
   unlockedTasks.forEach(t => {
-    const pts = diffPoints[t.difficulty] || 1;
+    const pts = XP_MAP[t.difficulty] || 1;
     totalPoints += pts;
     if (solvedIds.includes(t.id)) {
       earnedPoints += pts;
@@ -458,7 +458,7 @@ function render() {
                             <span 
                               onclick="event.stopPropagation()"
                               class="difficulty-badge text-xs font-semibold px-2.5 py-0.5 rounded-full border ${diffColors[t.difficulty] || diffColors.Easy}"
-                              data-tooltip="+${diffPoints[t.difficulty] || 1} XP за решение"
+                              data-tooltip="+${XP_MAP[t.difficulty] || 1} XP за решение"
                             >
                               ${t.difficulty}
                             </span>
