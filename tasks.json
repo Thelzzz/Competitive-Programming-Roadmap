@@ -8,16 +8,17 @@
         "tasks": [
           { "id": 1, "title": "ACMP 1231. Сортировка пузырьком", "url": "https://acmp.ru/index.asp?main=task&id_task=1231" },
           { "id": 2, "title": "ACMP 1702. Сортировка выбором", "url": "https://acmp.ru/index.asp?main=task&id_task=1702" },
+          { "id": 18, "title": "ACMP 119. Сортировка времени", "url": "https://acmp.ru/index.asp?main=task&id_task=119" },
+          { "id": 6, "title": "ACMP 648. Азартный Шрэк", "url": "https://acmp.ru/index.asp?main=task&id_task=648" },
           { "id": 3, "title": "ACMP 461. Выборы", "url": "https://acmp.ru/index.asp?main=task&id_task=461" },
           { "id": 4, "title": "ACMP 314. Лексикографический порядок чисел", "url": "https://acmp.ru/index.asp?main=task&id_task=314" },
           { "id": 5, "title": "ACMP 174. Свадьба", "url": "https://acmp.ru/index.asp?main=task&id_task=174" },
-          { "id": 6, "title": "ACMP 648. Азартный Шрэк", "url": "https://acmp.ru/index.asp?main=task&id_task=648" },
           { "id": 7, "title": "ACMP 32. Годовой баланс", "url": "https://acmp.ru/index.asp?main=task&id_task=32" },
-          { "id": 8, "title": "ACMP 184. Рабочее время", "url": "https://acmp.ru/index.asp?main=task&id_task=184" },
-          { "id": 9, "title": "ACMP 1437. Маги", "url": "https://acmp.ru/index.asp?main=task&id_task=1437" },
           { "id": 10, "title": "ACMP 178. Преобразование последовательности", "url": "https://acmp.ru/index.asp?main=task&id_task=178" },
+          { "id": 9, "title": "ACMP 1437. Маги", "url": "https://acmp.ru/index.asp?main=task&id_task=1437" },
+          { "id": 8, "title": "ACMP 184. Рабочее время", "url": "https://acmp.ru/index.asp?main=task&id_task=184" },
           { "id": 11, "title": "ACMP 475. Арифметическая прогрессия - 2", "url": "https://acmp.ru/index.asp?main=task&id_task=475" },
-          { "id": 12, "title": "ACMP 344. Ближайшие точки", "url": "https://acmp.ru/index.asp?main=task&id_task=344" }
+          { "id": 12, "title": "ACMP 344. Ближайшие точки", "url": "https://acmp.ru/index.asp?main=task&id_task=344", "difficulty": "Medium" }
         ]
       },
       {
