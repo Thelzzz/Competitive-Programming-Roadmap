@@ -23,7 +23,9 @@
           { "title": "ACMP 184. Рабочее время", "url": "https://acmp.ru/index.asp?main=task&id_task=184" },
           { "title": "ACMP 475. Арифметическая прогрессия - 2", "url": "https://acmp.ru/index.asp?main=task&id_task=475" },
           { "title": "ACMP 344. Ближайшие точки", "url": "https://acmp.ru/index.asp?main=task&id_task=344", "difficulty": "Medium" },
-          { "title": "ACMP 758. Веревочный мост", "url": "https://acmp.ru/index.asp?main=task&id_task=758", "difficulty": "Hard" }
+          { "title": "CodeForces 479C. Экзамены", "url": "https://codeforces.com/contest/479/problem/C", "difficulty": "Medium" },
+          { "title": "ACMP 758. Веревочный мост", "url": "https://acmp.ru/index.asp?main=task&id_task=758", "difficulty": "Hard" },
+          { "title": "CodeForces 2024C. Склеивание массивов", "url": "https://codeforces.com/contest/2024/problem/C", "difficulty": "Hard" }
         ]
       },
       {
