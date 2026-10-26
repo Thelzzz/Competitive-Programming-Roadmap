@@ -6,8 +6,8 @@
         "subtopic": "Сортировка 1",
         "difficulty": "Easy",
         "tasks": [
-          { "title": "ACMP 1702. Сортировка выбором", "url": "https://acmp.ru/index.asp?main=task&id_task=1702" },
           { "title": "ACMP 1231. Сортировка пузырьком", "url": "https://acmp.ru/index.asp?main=task&id_task=1231" },
+          { "title": "ACMP 1702. Сортировка выбором", "url": "https://acmp.ru/index.asp?main=task&id_task=1702" },
           { "title": "ACMP 119. Сортировка времени", "url": "https://acmp.ru/index.asp?main=task&id_task=119" },
           { "title": "ACMP 648. Азартный Шрэк", "url": "https://acmp.ru/index.asp?main=task&id_task=648" },
           { "title": "ACMP 461. Выборы", "url": "https://acmp.ru/index.asp?main=task&id_task=461" },
