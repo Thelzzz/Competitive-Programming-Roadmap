@@ -289,12 +289,7 @@ function populateCategoryFilter() {
 // 6. Отрисовка
 function render() {
   // Пул для верхних шкал прогресса (НЕ зависит от категории)
-  const progressTasks = tasks.filter(t => {
-    if (t.locked) return false;
-    const matchesDiff = currentDiffFilter === 'all' || t.difficulty === currentDiffFilter;
-    const matchesPlatform = currentPlatformFilter === 'all' || (t.url && getPlatformFromUrl(t.url) === currentPlatformFilter);
-    return matchesDiff && matchesPlatform;
-  });
+  const progressTasks = tasks.filter(t => !t.locked);
 
   // 1. Подсчет по количеству задач
   const total = progressTasks.length;
