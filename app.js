@@ -288,25 +288,27 @@ function populateCategoryFilter() {
 
 // 6. Отрисовка
 function render() {
-  // Базовый пул открытых задач с учетом активных фильтров категории, сложности и платформы
-  const contextTasks = tasks.filter(t => {
+  // 6. Отрисовка
+function render() {
+  // Пул задач для верхних шкал прогресса:
+  // Учитывает сложность и платформу, но НЕ зависит от выбранной категории (раздела)
+  const progressTasks = tasks.filter(t => {
     if (t.locked) return false;
     const matchesDiff = currentDiffFilter === 'all' || t.difficulty === currentDiffFilter;
-    const matchesCat = currentCategoryFilter === 'all' || (t.category || 'Общее') === currentCategoryFilter;
     const matchesPlatform = currentPlatformFilter === 'all' || (t.url && getPlatformFromUrl(t.url) === currentPlatformFilter);
-    return matchesDiff && matchesCat && matchesPlatform;
+    return matchesDiff && matchesPlatform;
   });
 
-  // 1. Подсчет по количеству задач для текущей выборки
-  const total = contextTasks.length;
-  const solved = contextTasks.filter(t => solvedIds.includes(t.id)).length;
+  // 1. Подсчет по количеству задач для верхних шкал
+  const total = progressTasks.length;
+  const solved = progressTasks.filter(t => solvedIds.includes(t.id)).length;
   const taskPercent = total > 0 ? Math.round((solved / total) * 100) : 0;
 
-  // 2. Подсчет по баллам (XP) для текущей выборки
+  // 2. Подсчет по баллам (XP) для верхних шкал
   let totalPoints = 0;
   let earnedPoints = 0;
 
-  contextTasks.forEach(t => {
+  progressTasks.forEach(t => {
     const pts = XP_MAP[t.difficulty] || 1;
     totalPoints += pts;
     if (solvedIds.includes(t.id)) {
@@ -330,21 +332,31 @@ function render() {
 
   // Задачи для отображения (дополнительно учитывается фильтр статуса "Решено / Не решено")
   const filtered = tasks.filter(t => {
+    // 1. Фильтр раздела должен совпадать всегда
+    const matchesCat = 
+      currentCategoryFilter === 'all' ? true : (t.category || 'Общее') === currentCategoryFilter;
+    if (!matchesCat) return false;
+
+    // 2. ИММУНИТЕТ ДЛЯ ЗАБЛОКИРОВАННЫХ:
+    // Они показываются ВСЕГДА (независимо от платформы и сложности).
+    // Скрываются только если пользователь явно нажал "Только решено".
+    if (t.locked) {
+      return currentStatusFilter !== 'solved';
+    }
+
+    // 3. Стандартная фильтрация для открытых задач
     const isSolved = solvedIds.includes(t.id);
     const matchesStatus = 
       currentStatusFilter === 'all' ? true :
       currentStatusFilter === 'solved' ? isSolved : !isSolved;
     
     const matchesDiff = 
-      currentDiffFilter === 'all' ? true : (!t.locked && t.difficulty === currentDiffFilter);
-
-    const matchesCat = 
-      currentCategoryFilter === 'all' ? true : (t.category || 'Общее') === currentCategoryFilter;
+      currentDiffFilter === 'all' ? true : t.difficulty === currentDiffFilter;
 
     const matchesPlatform = 
       currentPlatformFilter === 'all' ? true : (t.url && getPlatformFromUrl(t.url) === currentPlatformFilter);
 
-    return matchesStatus && matchesDiff && matchesCat && matchesPlatform;
+    return matchesStatus && matchesDiff && matchesPlatform;
   });
 
   const listContainer = document.getElementById('task-list');
@@ -371,7 +383,7 @@ function render() {
     const catTasks = filtered.filter(t => (t.category || 'Общее') === cat);
     
     // Считаем прогресс категории динамически под выбранные фильтры
-    const catContextTasks = contextTasks.filter(t => (t.category || 'Общее') === cat);
+    const catContextTasks = progressTasks.filter(t => (t.category || 'Общее') === cat);
     const solvedInCat = catContextTasks.filter(t => solvedIds.includes(t.id)).length;
     
     const isCollapsed = collapsedCategories.has(cat);
@@ -416,7 +428,7 @@ function render() {
             const isSubCollapsed = collapsedSubtopics.has(subKey);
 
             // Динамический подсчет для подтемы
-            const subContextTasks = contextTasks.filter(t => (t.category || 'Общее') === cat && (t.subtopic || '') === subName);
+            const subContextTasks = progressTasks.filter(t => (t.category || 'Общее') === cat && (t.subtopic || '') === subName);
             const solvedInSub = subContextTasks.filter(t => solvedIds.includes(t.id)).length;
 
             const allSubTasks = tasks.filter(t => (t.category || 'Общее') === cat && (t.subtopic || '') === subName);
