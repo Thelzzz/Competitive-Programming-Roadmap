@@ -378,21 +378,34 @@ function render() {
                               />`
                           }
                           
-                          <div class="truncate">
+                          <div class="truncate flex-1 min-w-0">
                             ${isLocked 
                               ? `<span class="text-sm sm:text-base font-medium italic text-slate-400 dark:text-slate-500 select-none">Скрытая задача</span>`
-                              : `<a 
-                                  href="${t.url}" 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  onclick="event.stopPropagation()"
-                                  class="text-sm sm:text-base font-medium truncate hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors ${
-                                    isSolved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'
-                                  }"
-                                  title="Перейти к задаче: ${t.title}"
-                                >
-                                  ${t.title}
-                                </a>`
+                              : `<div class="flex items-center gap-1.5 truncate">
+                                  <a 
+                                    href="${t.url}" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    onclick="event.stopPropagation()"
+                                    class="text-sm sm:text-base font-medium truncate hover:text-blue-600 dark:hover:text-blue-400 hover:underline transition-colors ${
+                                      isSolved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'
+                                    }"
+                                    title="Перейти к задаче: ${t.title}"
+                                  >
+                                    ${t.title}
+                                  </a>
+
+                                  <!-- КРУЖОЧЕК "i" (появляется, если у задачи есть "note") -->
+                                  ${t.note ? `
+                                    <span 
+                                      onclick="event.stopPropagation(); alert('${t.note.replace(/'/g, "\\'")}')"
+                                      title="${t.note}"
+                                      class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-800/80 text-[10px] font-serif font-bold cursor-help flex-shrink-0 hover:scale-110 transition-transform select-none"
+                                    >
+                                      i
+                                    </span>
+                                  ` : ''}
+                                </div>`
                             }
                             ${isLocked && t.lockReason ? `<p class="text-[11px] text-amber-600 dark:text-amber-400 font-medium not-italic">${t.lockReason}</p>` : ''}
                           </div>
