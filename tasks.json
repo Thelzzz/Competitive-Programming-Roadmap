@@ -47,7 +47,7 @@
           { "title": "ACMP 252. Сортировка масс", "url": "https://acmp.ru/index.asp?main=task&id_task=252", "difficulty": "Medium" },
           { "title": "CodeForces 1808B. Игра в казино", "url": "https://codeforces.com/contest/1808/problem/B", "difficulty": "Hard" },
           { "title": "ACMP 112. Армия", "url": "https://acmp.ru/index.asp?main=task&id_task=112", "difficulty": "Hard" },
-          { "title": "CodeForces 2063В. Обновление подпоследовательности", "url": "https://codeforces.com/contest/2063/problem/В" , "Hard" },
+          { "title": "CodeForces 2063В. Обновление подпоследовательности", "url": "https://codeforces.com/contest/2063/problem/В" , "difficulty": "Hard" },
           { "title": "CodeForces 632C. Наименьшая конкатенация строк", "url": "https://codeforces.com/contest/632/problem/C", "difficulty": "Hard" }
         ]
       }
