@@ -43,7 +43,7 @@
           { "title": "ACMP 983. Бег по эскалатору", "url": "https://acmp.ru/index.asp?main=task&id_task=983" },
           { "title": "CodeForces 545D. Очередь", "url": "https://codeforces.com/contest/545/problem/D" },
           { "title": "CodeForces 285C. Получаем перестановку", "url": "https://codeforces.com/contest/285/problem/C" },
-          { "title": "CodeForces 2193D. Игра с монстрами", "url": "https://codeforces.com/contest/2193/problem/D" , "difficulty": "Medium" },
+          { "title": "CodeForces 2193D. Игра с монстрами", "url": "https://codeforces.com/contest/2193/problem/D", "difficulty": "Medium" },
           { "title": "ACMP 252. Сортировка масс", "url": "https://acmp.ru/index.asp?main=task&id_task=252", "difficulty": "Medium" },
           { "title": "CodeForces 1808B. Игра в казино", "url": "https://codeforces.com/contest/1808/problem/B", "difficulty": "Hard" },
           { "title": "ACMP 112. Армия", "url": "https://acmp.ru/index.asp?main=task&id_task=112", "difficulty": "Hard" },
