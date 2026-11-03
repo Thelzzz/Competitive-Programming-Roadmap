@@ -34,6 +34,7 @@
         "tasks": [
           { "title": "ACMP 41. Сортировка подсчетом", "url": "https://acmp.ru/index.asp?main=task&id_task=41" },
           { "title": "ACMP 224. Наибольшее произведение", "url": "https://acmp.ru/index.asp?main=task&id_task=224" },
+          { "title": "CodeForces 1311B. WeirdSort", "url": "https://codeforces.com/contest/1311/problem/B" },
           { "title": "ACMP 1168. Экзамены", "url": "https://acmp.ru/index.asp?main=task&id_task=41" },
           { "title": "ACMP 1016. Ученики", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=791" },
           { "title": "ACMP 1009. Прыжки в длину", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=792" },
@@ -47,6 +48,7 @@
           { "title": "ACMP 252. Сортировка масс", "url": "https://acmp.ru/index.asp?main=task&id_task=252", "difficulty": "Medium" },
           { "title": "CodeForces 1808B. Игра в казино", "url": "https://codeforces.com/contest/1808/problem/B", "difficulty": "Hard" },
           { "title": "ACMP 112. Армия", "url": "https://acmp.ru/index.asp?main=task&id_task=112", "difficulty": "Hard" },
+          { "title": "CodeForces 977D. Подели на три, умножь на два", "url": "https://codeforces.com/contest/977/problem/D", "difficulty": "Hard" },
           { "title": "CodeForces 2063В. Обновление подпоследовательности", "url": "https://codeforces.com/contest/2063/problem/B" , "difficulty": "Hard" },
           { "title": "CodeForces 632C. Наименьшая конкатенация строк", "url": "https://codeforces.com/contest/632/problem/C", "difficulty": "Hard" }
         ]
