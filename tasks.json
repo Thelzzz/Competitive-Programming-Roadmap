@@ -31,16 +31,18 @@
       {
         "subtopic": "Сортировка 2",
         "difficulty": "Easy",
-        "locked": true,
-        "lockReason": "Откроется после следующего занятия",
         "tasks": [
+          { "title": "ACMP 41. Сортировка подсчетом", "url": "https://acmp.ru/index.asp?main=task&id_task=41" },
           { "title": "ACMP 224. Наибольшее произведение", "url": "https://acmp.ru/index.asp?main=task&id_task=224" },
-          { "title": "ACMP 112. Армия", "url": "https://acmp.ru/index.asp?main=task&id_task=112" },
-          { "title": "ACMP 252. Сортировка масс", "url": "https://acmp.ru/index.asp?main=task&id_task=252" },
           { "title": "ACMP 1168. Экзамены", "url": "https://acmp.ru/index.asp?main=task&id_task=41" },
           { "title": "ACMP 1016. Ученики", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=791" },
           { "title": "ACMP 1009. Прыжки в длину", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=7&id_topic=126&id_problem=792" },
-          { "title": "ACMP 635. Интернет-олимпиады", "url": "https://acmp.ru/index.asp?main=task&id_task=635" }
+          { "title": "ACMP 878. Алфавит", "url": "https://acmp.ru/index.asp?main=task&id_task=878" },
+          { "title": "ACMP 635. Интернет-олимпиады", "url": "https://acmp.ru/index.asp?main=task&id_task=635" },
+          { "title": "ACMP 769. Список предметов", "url": "https://acmp.ru/index.asp?main=task&id_task=769" },
+          { "title": "ACMP 983. Бег по эскалатору", "url": "https://acmp.ru/index.asp?main=task&id_task=983" },
+          { "title": "ACMP 252. Сортировка масс", "url": "https://acmp.ru/index.asp?main=task&id_task=252", "difficulty": "Medium" },
+          { "title": "ACMP 112. Армия", "url": "https://acmp.ru/index.asp?main=task&id_task=112", "difficulty": "Hard" }
         ]
       }
     ]
