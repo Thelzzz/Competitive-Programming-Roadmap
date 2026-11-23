@@ -78,6 +78,26 @@
           {"title": "CodeForces 2032C. Тройка", "url": "https://codeforces.com/contest/2032/problem/C", "difficulty": "Medium"},
           {"title": "CodeForces 2051E. Лучшая цена", "url": "https://codeforces.com/contest/2051/problem/E", "difficulty": "Hard"}
         ]
+      },
+      {
+        "subtopic": "Бинарный поиск по ответу",
+        "tasks": [
+          {"title": "CodeForces 1352C. K-е неделящееся на n", "url": "https://codeforces.com/contest/1352/problem/C" },
+          {"title": "ACMP 267. Ксерокопии", "url": "https://acmp.ru/index.asp?main=task&id_task=267" },
+          {"title": "ACMP 712. Дипломы", "url": "https://acmp.ru/index.asp?main=task&id_task=712" },
+          {"title": "CodeForces 1873E. Построение аквариума", "url": "https://codeforces.com/contest/1873/problem/E" },
+          {"title": "ACMP 1211. Вырубка леса", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=3&id_topic=37&id_problem=690" },
+          {"title": "CodeForces 1850E. Картон для картин", "url": "https://codeforces.com/contest/1850/problem/E" },
+          {"title": "CodeForces 2008C. Самый длинный хороший массив", "url": "https://codeforces.com/contest/2008/problem/C" },
+          {"title": "ACMP 1397. Космическое поселение", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=3&id_topic=37&id_problem=215" },
+          {"title": "CodeForces EDU. Разделение массива", "url": "https://codeforces.com/edu/course/2/lesson/6/3/practice/contest/285083/problem/B" },
+          {"title": "ACMP 1456. Кампус", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=3&id_topic=37&id_problem=1631", "difficulty": "Medium"},
+          {"title": "CodeForces EDU. Коровы в стойла", "url": "https://codeforces.com/edu/course/2/lesson/6/3/practice/contest/285083/problem/С", "difficulty": "Medium"},
+          {"title": "ACMP 523. Роман в томах", "url": "https://acmp.ru/index.asp?main=task&id_task=523", "difficulty": "Medium"},
+          {"title": "CodeForces 1201C. Максимальная медиана", "url": "https://codeforces.com/contest/1201/problem/C", "difficulty": "Medium"},
+          {"title": "CodeForces 371C. Гамбургеры", "url": "https://codeforces.com/contest/371/problem/C", "difficulty": "Medium"},
+          {"title": "ACMP 1940. Бактерии", "url":"https://acmp.ru/asp/do/index.asp?main=task&id_course=3&id_section=24&id_topic=345&id_problem=2243", "difficulty": "Hard"}
+        ]
       }
     ]
   }
