@@ -56,4 +56,25 @@
       }
     ]
   }
+  {
+    "category": "Бинарный поиск",
+    "difficulty": "Easy",
+    "tasks": [
+      {"title": "ACMP 1130. Сложность бинарного поиска", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=3&id_topic=37&id_problem=212" },
+      {"title": "CodeForces EDU. Двоичный поиск", "url": "https://codeforces.com/edu/course/2/lesson/6/1/practice/contest/283911/problem/A" },
+      {"title": "CodeForces EDU. Ближайшее слева", "url": "https://codeforces.com/edu/course/2/lesson/6/1/practice/contest/283911/problem/B" },
+      {"title": "CodeForces EDU. Ближайшее справа", "url": "https://codeforces.com/edu/course/2/lesson/6/1/practice/contest/283911/problem/С" },
+      {"title": "CodeForces EDU. Быстрый поиск в массиве", "url": "https://codeforces.com/edu/course/2/lesson/6/1/practice/contest/283911/problem/D" },
+      {"title": "ACMP 1465. Угадай число", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=1&id_section=3&id_topic=37&id_problem=1131", "note": "Интерактивная задача. Обязательно прочитайте примечение"},
+      {"title": "CodeForces 600B. Запросы о количестве не превосходящих элементов", "url": "https://codeforces.com/contest/600/problem/B" },
+      {"title": "CodeForces 706B. Интересный напиток", "url": "https://codeforces.com/contest/706/problem/B" },
+      {"title": "CodeForces 1538C. Количество пар", "url": "https://codeforces.com/contest/1538/problem/C" },
+      {"title": "CodeForces 2051D. Подсчет количества пар", "url": "https://codeforces.com/contest/2051/problem/D" },
+      {"title": "CodeForces 702C. Сотовая связь", "url": "https://codeforces.com/contest/702/problem/C" },
+      {"title": "CodeForces 1703F. Очередная задача про пары, удовлетворяющие неравенству", "url": "https://codeforces.com/contest/1703/problem/F", "difficulty": "Medium"},
+      {"title": "CodeForces 1324D. Пара тем", "url": "https://codeforces.com/contest/1324/problem/D", "difficulty": "Medium"},
+      {"title": "CodeForces 2032C. Тройка", "url": "https://codeforces.com/contest/2032/problem/C", "difficulty": "Medium"},
+      {"title": "CodeForces 2051E. Лучшая цена", "url": "https://codeforces.com/contest/2051/problem/E", "difficulty": "Hard"}
+    ]
+  }
 ]
