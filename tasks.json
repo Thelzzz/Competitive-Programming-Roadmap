@@ -100,5 +100,33 @@
         ]
       }
     ]
+  },
+  {
+    "category": "Комбинаторика",
+    "difficulty": "Easy",
+    "subtopics": [
+      {
+        "subtopic": "Формулы",
+        "tasks": [
+          {"title": "ACMP 893. Хоккей", "url": "https://acmp.ru/index.asp?main=task&id_task=893" },
+          {"title": "ACMP 513. Салаты", "url": "https://acmp.ru/index.asp?main=task&id_task=513" },
+          {"title": "ACMP 281. Игра с монеткой", "url": "https://acmp.ru/index.asp?main=task&id_task=281" },
+          {"title": "ACMP 282. Прямоугольники", "url": "https://acmp.ru/index.asp?main=task&id_task=282" },
+          {"title": "ACMP 328. Точки на костях Домино", "url": "https://acmp.ru/index.asp?main=task&id_task=328" },
+          {"title": "ACMP 462. Числа", "url": "https://acmp.ru/index.asp?main=task&id_task=462" },
+          {"title": "ACMP 171. Количество делителей", "url": "https://acmp.ru/index.asp?main=task&id_task=171", "difficulty": "Medium"},
+          {"title": "ACMP 280. Количество делителей - 2", "url": "https://acmp.ru/index.asp?main=task&id_task=280", "difficulty": "Medium"},
+          {"title": "ACMP 156. Шахматы - 2", "url": "https://acmp.ru/index.asp?main=task&id_task=156", "difficulty": "Medium"}
+          {"title": "ACMP 401. Шары и коробки", "url": "https://acmp.ru/index.asp?main=task&id_task=401", "difficulty": "Medium"},
+          {"title": "ACMP 1014. Обмен", "url": "https://acmp.ru/asp/do/index.asp?main=task&id_course=2&id_section=16&id_topic=21&id_problem=109", "difficulty": "Medium"},
+          {"title": "ACMP 188. День рождения", "url": "https://acmp.ru/index.asp?main=task&id_task=188", "difficulty": "Medium"},
+          {"title": "ACMP 167. Количество треугольников", "url": "https://acmp.ru/index.asp?main=task&id_task=167", "difficulty": "Hard"},
+          {"title": "ACMP 299. Волейбол", "url": "https://acmp.ru/index.asp?main=task&id_task=299", "difficulty": "Hard"},
+          {"title": "ACMP 304. Волейбол - 2", "url": "https://acmp.ru/index.asp?main=task&id_task=304", "difficulty": "Hard"},
+          {"title": "ACMP 158. Великий комбинатор", "url": "https://acmp.ru/index.asp?main=task&id_task=158", "difficulty": "Hard"},
+          {"title": "ACMP 77. Нолики", "url": "https://acmp.ru/index.asp?main=task&id_task=77", "difficulty": "Hard"}
+        ]
+      }
+    ]
   }
 ]
